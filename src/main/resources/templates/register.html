@@ -1,0 +1,165 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	class="no-js" lang="">
+<head >
+<th:block  th:include="head::head_link"></th:block>
+<meta charset="utf-8">
+<title></title>
+</head>
+
+<body>
+	<!--[if lte IE 9]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+	<div class="container-fluid" ng-app="products"
+		ng-controller="myControl">
+
+	
+		<div th:replace="head::nav"> </div>
+
+		<!-- content starts here -->
+		<section>
+	
+	<div class="row my-5">
+	<div class="col-md-4 offset-md-4 my-5">
+		
+			<!-- Default form register -->
+<form class="text-center border border-light p-5" th:action="@{/user/register}" method="post">
+
+    <p class="h4 mb-4">注册</p>
+
+    <div class="form-row mb-4">
+        <div class="col">
+            <!-- First name -->
+            <input type="text" id="defaultRegisterFormFirstName" th:value="${user!=null}?${user.firstName}" class="form-control" name="firstName" placeholder="First name">
+        </div>
+        <div class="col">
+            <!-- Last name -->
+            <input type="text" id="defaultRegisterFormLastName" th:value="${user!=null}?${user.lastName}" class="form-control" name="lastName"  placeholder="Last name">
+        </div>
+    </div>
+
+    <!-- E-mail -->
+    <input type="email" id="defaultRegisterFormEmail"  name="email"  th:value="${user!=null}?${user.email}"    class="form-control mb-4" placeholder="E-mail">
+
+    <!-- Password -->
+    <input type="password" name="password" id="defaultRegisterFormPassword" class="form-control" placeholder="Password" aria-describedby="defaultRegisterFormPasswordHelpBlock">
+    <small id="defaultRegisterFormPasswordHelpBlock"  class="form-text text-muted mb-4">
+        <!-- At least 8 characters and 1 digit -->
+        	最少6位数
+    </small>
+
+    <!-- Phone number -->
+    <input type="text" id="defaultRegisterPhonePassword"  th:value="${user!=null}?${user.phone}"  name="phone"  class="form-control" placeholder="Phone number" aria-describedby="defaultRegisterFormPhoneHelpBlock">
+    <small id="defaultRegisterFormPhoneHelpBlock" class="form-text text-muted mb-4">
+       <!--  Optional - for two step authentication -->
+       	可选的
+    </small>
+       <p style="color: red;" th:text="${error==null}?'':${error}">
+       <!--  Optional - for two step authentication -->
+      
+    </p>
+
+    <!-- Newsletter -->
+    <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" id="defaultRegisterFormNewsletter">
+        <label class="custom-control-label" for="defaultRegisterFormNewsletter">Subscribe to our newsletter</label>
+        <p style="font-size: 0.5em;"><em>(开发中)</em></p>
+    
+    </div>
+
+    <!-- Sign up button -->
+    <button class="btn btn-info my-4 btn-block" type="submit">注册</button>
+
+    <!-- Social register -->
+    <p>or sign up with:</p>
+
+    <a type="button" class="light-blue-text mx-2">
+        <i class="fa fa-facebook"></i>
+    </a>
+    <a type="button" class="light-blue-text mx-2">
+        <i class="fa fa-twitter"></i>
+    </a>
+    <a type="button" class="light-blue-text mx-2">
+        <i class="fa fa-linkedin"></i>
+    </a>
+    <a type="button" class="light-blue-text mx-2">
+        <i class="fa fa-github"></i>
+    </a>
+
+    <hr>
+
+    <!-- Terms of service -->
+    <p>By clicking
+        <em>Sign up</em> you agree to our
+        <a href="" target="_blank">terms of service</a> and
+        <a href="" target="_blank">terms of service</a>. </p>
+
+</form>
+
+</div>
+	</div>	
+		</section>
+
+
+		<div th:replace="footer::footer"></div>
+	
+	</div>
+
+
+
+
+
+
+	<div th:replace="commonjs::js"></div>
+
+	<script th:inline="javascript">
+	var u=[[@{/}]];
+	var url=u+"product/getProducts".replace("\\","");
+	var app = angular.module('products', []);
+	var csrfName= [[${_csrf.headerName}]];
+    var  token= [[${_csrf.token}]];
+	app.controller('myControl', function($scope,$http,$location) {
+	
+	 
+	    $scope.productDetail=function (id){			
+	    						window.location.href=(u+"productdetail/"+id).replace("\\","");
+	    					}
+		load($scope,$http,0);
+	    $scope.getContent=function(requestPage){	    	
+	    	load($scope,$http,requestPage);
+	    }
+	});
+	
+	function load($scope,$http,currentPage){
+		 $http.defaults.headers.common[csrfName] = token;
+			$http({  
+
+			    method:'post',  
+
+			    url:url+"?currentPage="+currentPage+"&pageSize=24",  
+
+			    data:{}  
+				
+
+			}).then(function successCallback(req){  			
+				$scope.products=req["data"]["result"]["beans"];
+				$scope.pages=req["data"]["result"];
+				var start=$scope.pages["beginNumber"]+1;
+				var end=$scope.pages["endNumber"]+1;
+				var input=[];
+				for(var i=start;i<end;i++){
+		    		input.push(i);
+		    	}
+				$scope.pageArray=input;			
+			})  
+		
+	}
+	
+	
+	
+	</script>
+</body>
+
+</html>

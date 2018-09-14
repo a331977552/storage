@@ -1,0 +1,329 @@
+<!doctype html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	class="no-js" lang="">
+<head >
+<th:block  th:include="head::head_link"></th:block>
+<meta charset="utf8">
+<link rel="stylesheet" th:href="@{/css/index.css}">
+
+
+
+<title>TT_Mart</title>
+</head>
+
+<body>
+	<!--[if lte IE 9]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+	<div class="container-fluid" ng-app="products"
+		ng-controller="myControl">
+
+		<!-- nav -->
+		
+		<div th:replace="head::nav"> </div>
+
+		<!-- nav end -->
+
+		<!-- carousel  -->
+		
+		<div class="row" style="margin-bottom: 20px; margin-top: 20px;">
+			<div id="carouselExampleIndicators"
+				class="carousel slide col-md-12 justify-content-center"
+				data-ride="carousel">
+				<ol class="carousel-indicators">
+					<li th:each="car,stat:${carousels}"
+						data-target="#carouselExampleIndicators"
+						th:data-slide-to="${stat.index}"
+						th:class="${stat.index}==0?active:''"></li>
+				</ol>
+				<div class="carousel-inner">
+
+					<div th:each="car,stat:${carousels}"
+						th:class="${stat.index}==0?'carousel-item active':'carousel-item'">
+						<a th:href="${car.redirect_url}"> <img class="d-block w-100"
+							th:src="${car.pic_url}" alt="First slide">
+						</a>
+						<div class="carousel-caption d-none d-md-block">
+							<h5 th:text="${car.title}"></h5>
+						</div>
+					</div>
+
+
+				</div>
+				<a class="carousel-control-prev" href="#carouselExampleIndicators"
+					role="button" data-slide="prev"> <span
+					class="carousel-control-prev-icon" aria-hidden="true"></span> <span
+					class="sr-only">Previous</span>
+				</a> <a class="carousel-control-next" href="#carouselExampleIndicators"
+					role="button" data-slide="next"> <span
+					class="carousel-control-next-icon" aria-hidden="true"></span> <span
+					class="sr-only">Next</span>
+				</a>
+			</div>
+		</div>
+		<!-- carousel end  -->
+		<!-- search  -->
+		<div class="row" style="margin-bottom: 20px;">
+
+			
+			
+			
+			<div class="input-group mb-3 col-md-8 offset-md-2">
+			  <input  ng-keypress="$event.keyCode==13&&search()" ng-model="search_value"  id="input_search"   type="text" class="form-control typeahead" th:placeholder="#{index.search.name}" autocomplete="off" aria-label="Recipient's username" aria-describedby="basic-addon2">
+			  <div class="input-group-append">
+			    <button ng-click="search()" class="btn btn-outline-secondary" type="button">搜索</button>
+			  </div>
+			</div>
+			
+			
+
+		</div>
+		<!-- search end -->
+		<!-- product display -->
+		<div class="row" style="margin-bottom: 10px;">
+			<!-- product left area -->
+			<div class="col-md-2 text-right">
+			
+			<h3 class="h3" th:x="#{product.category.name}">商品种类</h3>
+			<div class="row">		
+			<div class="col-md-6 offset-md-6 col-sm-12  col-xs-12">
+			<div class="list-group" id="list-tab" role="tablist">
+		      <a  th:each="category,stat:${categories}"   class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab"
+		      th:text="${category.name}"
+		      >Home</a>
+		     
+		    </div>
+		    </div>
+			</div>
+			</div>
+
+
+
+			<div class="col-md-8 ">
+				<div class="row" id="products">
+					<div ng-show="products==null"
+						class="col-md-12 justify-content-center p-3" align="center">
+						<div class="loader"></div>
+					</div>
+
+					<div class="col-md-3 my-1 col-sm-6 col-xs-6" ng-repeat="product in products">
+			           
+					
+					
+						 <div class="card my-gallery-hover">				
+							<a href=""
+									ng-click="productDetail(product.id)" >	<img ng-attr-data-id="{{product.id}}" width="100%" class="card-img-top"
+									ng-src="{{product.imgUrl}}" alt="Card image cap"> 
+								
+								</a>
+							<div class="card-body p-1">
+
+								<p class="card-title h6-responsive"
+									style="word-break: break-all; text-overflow: ellipsis; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; -webkit-line-clamp: 1;">
+									{{product.name}}</p>
+								<p class="card-text" 
+								style="word-break: break-all; text-overflow: ellipsis; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; -webkit-line-clamp: 1;"
+								>{{product.title}}</p>
+								<div class="row">
+								<div class="col-md-6 text-left">
+									<span class="h6-responsive">价格:
+										{{product.sellingprice/100}}</span>
+			
+								</div> 
+								<div class="col-md-6 text-right">
+									<span class="h6-responsive">库存:
+										{{product.quantity}}</span>
+			
+								</div> 
+									
+								</div>
+								<div class="row">
+									<div class="col-md-12 text-right">
+										<button id="btn_add_cart" ng-click="addCart(product.id)" class="btn btn-sm btn-primary">添加购物车</button>
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+
+
+			</div>
+		</div>
+		<!-- product display end -->
+		<!-- pagination -->
+		<div class="row my-5">
+			<div class="col-md-12">
+
+
+				<!--Pagination -->
+				<nav aria-label="pagination example">
+					<ul
+						class="pagination justify-content-center">
+
+						<!--First-->
+						<li
+							ng-class="pages.currentPage==0?'page-item disabled':'page-item'"><a
+							ng-click="getContent(0)" class="page-link">First</a></li>
+
+						<!--Arrow left-->
+						<li
+							ng-class="pages.currentPage==0?'page-item disabled':'page-item'">
+							<a class="page-link" aria-label="Previous"
+							ng-click="getContent(pages.currentPage-1)"> <span
+								aria-hidden="true">&laquo;</span> <span class="sr-only">Previous</span>
+						</a>
+						</li>
+
+
+
+						<li ng-repeat="ps in pageArray"
+							ng-class="ps==(pages.currentPage+1)?'page-item active':'page-item'"><a
+							class="page-link" href="#"
+							ng-click="ps==(pages.currentPage+1)?'':getContent(ps-1)">{{ps}}</a></li>
+
+						<!--Arrow right-->
+						<li
+							ng-class="pages.currentPage==(pages.totalPage-1)?'page-item disabled':'page-item'">
+							<a ng-click="getContent(pages.currentPage+1)" class="page-link"
+							aria-label="Next"> <span aria-hidden="true">&raquo;</span> <span
+								class="sr-only">Next</span>
+						</a>
+						</li>
+
+						<!--Last-->
+						<li
+							ng-class="pages.currentPage==(pages.totalPage-1)?'page-item disabled':'page-item'">
+							<a ng-click="getContent(pages.totalPage-1)" class="page-link">Last</a>
+						</li>
+
+					</ul>
+				</nav>
+
+			</div>
+		</div>
+		<!-- pagination end -->
+
+		<!-- Footer -->
+		<div th:replace="footer::footer"></div>
+		<!-- Footer -->
+	</div>
+
+
+
+
+
+
+	<div th:replace="commonjs::js"></div>
+	<script type="text/javascript" th:src="@{/js/bootstrap3-typeahead.min.js}"></script>
+	<script type="text/javascript" th:src="@{/js/bloodhound.min.js}"></script>
+	<script th:inline="javascript">
+	var u=[[@{/}]];
+	var url=u+"product/getProducts".replace("\\","");
+	var app = angular.module('products', []);
+	var csrfName= [[${_csrf.headerName}]];
+    var  token= [[${_csrf.token}]];
+	app.controller('myControl', function($scope,$http,$location) {
+	
+	 
+	    $scope.productDetail=function (id){			
+	    						window.location.href=(u+"productdetail/"+id).replace("\\","");
+	    					}
+	    $scope.addCart=function(id){
+	    	 var context = [[@{/}]]+"cart/add";
+		        	context=context.replace("\\","");
+	    	 $http.defaults.headers.common[csrfName] = token;
+	    	 $http({  
+				    method:'post',  
+				    url:context,  				    
+				    data:[{productid:id,quantity:1}] 					
+				}).then(function successCallback(req){  			
+					if(req["data"]["code"]==200){
+						alert([[#{index.shopping.cart.success}]]);
+					}	
+					
+				})  
+			
+		        	
+	    }
+	    $scope.search=function (){
+	    	var inputValue=$scope.search_value;
+	    	load($scope,$http,0,{name:inputValue}); 	
+	    }
+		load($scope,$http,0,{});
+	    $scope.getContent=function(requestPage){	    	
+	    	load($scope,$http,requestPage,{});
+	    }
+	});
+	
+	function load($scope,$http,currentPage,dataValue){
+		 $http.defaults.headers.common[csrfName] = token;
+			$http({  
+
+			    method:'post',  
+
+			    url:url+"?currentPage="+currentPage+"&pageSize=24",  
+
+			    data:dataValue 
+				
+
+			}).then(function successCallback(req){  			
+				$scope.products=req["data"]["result"]["beans"];
+				$scope.pages=req["data"]["result"];
+				
+				var start=$scope.pages["beginNumber"]+1;
+				var end=$scope.pages["endNumber"]+1;
+				var input=[];
+				for(var i=start;i<end;i++){
+		    		input.push(i);
+		    	}
+				$scope.pageArray=input;			
+			})  
+		
+	}
+	
+	$().ready(function (){
+
+		   var context = [[@{/}]]+"product/getName/";
+	        	context=context.replace("\\","");
+	   
+		   var engine = new Bloodhound({
+			   datumTokenizer: Bloodhound.tokenizers.whitespace,
+			   queryTokenizer: Bloodhound.tokenizers.whitespace,
+			   identify: function(obj) { return obj.id; },
+			   prefetch: context+"1.json",
+			   
+			   remote: {
+				    url: context+"-1.json",				   
+				  }
+			 });
+		   engine.initialize();
+		  
+
+		   $('#input_search').typeahead({
+		     fitToElement: true,
+		   	 items:8,
+		   	 minLength:1,
+		   	 delay:500,	
+		     name: 'all-category',
+		     display: 'name',
+		     source: engine.ttAdapter()
+		   });
+		   
+		   
+		
+		
+	})
+	
+	
+	
+	</script>
+</body>
+
+</html>

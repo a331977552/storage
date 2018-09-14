@@ -1,0 +1,148 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	class="no-js" lang="">
+<head>
+<th:block th:include="head::head_link"></th:block>
+<meta charset="utf-8">
+<title></title>
+</head>
+
+<body>
+	<!--[if lte IE 9]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+	<div class="container-fluid" ng-app="products"
+		ng-controller="myControl">
+
+
+		<div th:replace="head::nav"></div>
+
+		<!-- content starts here -->
+		<section>
+			<div>
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a th:href="@{/index}"
+							th:text="#{common.home}">Home</a></li>
+
+						<li class="breadcrumb-item active" aria-current="page"
+							th:text="#{breadcrumb.shoppingcart}">Data</li>
+					</ol>
+				</nav>
+			</div>
+			<div class="row" style="margin-top: 20px;">
+				<div class="col-md" align="center">
+					<h1 th:text="#{breadcrumb.shoppingcart}"></h1>
+				</div>
+			</div>
+			<div class="row" style="margin-top: 40px;">
+
+				<div class="col-md-8 offset-md-2" >
+
+					<div class="table-responsive">
+						<table   class="table table-hover text-center"
+							style="font-size: 1.2em;">
+							<thead>
+								<tr>
+									<th scope="col"><button class="btn btn-danger btn-sm"
+											th:text="#{common.delete}">Delete</button></th>
+									<th scope="col">name</th>
+									<th scope="col" th:text="#{cart.price}">price</th>
+									<th scope="col">quantity</th>
+									<th scope="col">subtotal</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="item,stat:${items}">
+									<td><input type="checkbox"
+										 value="" style="transform:scale(1.5)"></td>
+									<td ><div >
+										<span style="vertical-align: top;" th:text="${products[stat.index].product.name}"></span>
+										<img  th:src="${products[stat.index].imgs[0].url+'?widht=100&height=100'}">
+									</div></td>
+									<td  th:text="${products[stat.index].product.sellingprice}/100">price</td>
+									<td th:text="${item.quantity}">Mark</td>
+									<td
+										th:text="${products[stat.index].product.sellingprice}/100*${item.quantity}">Otto</td>
+								</tr>
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-8 offset-md-2" align="right">
+					<div class=" mb-3" style="max-width: 18rem;">
+						
+							<h5 class="card-title" th:text="#{cart.totalPrice}" >总价:</h5>
+							<p class="card-text"></p>
+								 <a href="#" class="btn btn-primary" th:text="#{cart.submit.order}">提交订单</a>
+					
+					</div>
+				</div>
+			</div>
+		</section>
+
+
+		<div th:replace="footer::footer"></div>
+
+	</div>
+
+
+
+
+
+
+	<div th:replace="commonjs::js"></div>
+
+	<script th:inline="javascript">
+	var u=[[@{/}]];
+	var url=u+"product/getProducts".replace("\\","");
+	var app = angular.module('products', []);
+	var csrfName= [[${_csrf.headerName}]];
+    var  token= [[${_csrf.token}]];
+	app.controller('myControl', function($scope,$http,$location) {
+	
+	 
+	    $scope.productDetail=function (id){			
+	    						window.location.href=(u+"productdetail/"+id).replace("\\","");
+	    					}
+		load($scope,$http,0);
+	    $scope.getContent=function(requestPage){	    	
+	    	load($scope,$http,requestPage);
+	    }
+	});
+	
+	function load($scope,$http,currentPage){
+		 $http.defaults.headers.common[csrfName] = token;
+			$http({  
+
+			    method:'post',  
+
+			    url:url+"?currentPage="+currentPage+"&pageSize=24",  
+
+			    data:{}  
+				
+
+			}).then(function successCallback(req){  			
+				$scope.products=req["data"]["result"]["beans"];
+				$scope.pages=req["data"]["result"];
+				var start=$scope.pages["beginNumber"]+1;
+				var end=$scope.pages["endNumber"]+1;
+				var input=[];
+				for(var i=start;i<end;i++){
+		    		input.push(i);
+		    	}
+				$scope.pageArray=input;			
+			})  
+		
+	}
+	
+	
+	
+	</script>
+</body>
+
+</html>

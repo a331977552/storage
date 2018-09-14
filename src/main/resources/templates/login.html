@@ -1,0 +1,145 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	class="no-js" lang="">
+<head>
+<th:block th:include="head::head_link"></th:block>
+<meta charset="utf-8">
+<title></title>
+</head>
+
+<body>
+	<!--[if lte IE 9]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+	<div class="container-fluid" ng-app="products"
+		ng-controller="myControl">
+
+
+		<div th:replace="head::nav"></div>
+
+		<!-- content starts here -->
+		<section>
+
+			<div class="row my-5">
+				<div class="col-md-4 offset-md-4  my-5">
+
+					<!-- Default form login -->
+					<form method="post" th:action="@{/userlogin}" class="text-center border border-light p-5">
+
+						<p class="h4 mb-4">Sign in</p>
+
+						<!-- Email -->
+						<input type="email" name="email" id="defaultLoginFormEmail"
+							class="form-control mb-4" placeholder="E-mail">
+
+						<!-- Password -->
+						<input type="password" name="password" id="defaultLoginFormPassword"
+							class="form-control mb-4" placeholder="Password">
+						<p class="h6 mb-4" th:if="${param.error!=null}" th:text="${param.error}" style="color: red;"></p>
+
+						<div class="d-flex justify-content-around">
+							<div>
+								<!-- Remember me -->
+								<div class="custom-control custom-checkbox">
+									<input type="checkbox" class="custom-control-input"
+										id="defaultLoginFormRemember"> <label
+										class="custom-control-label" for="defaultLoginFormRemember">Remember
+										me</label>
+								</div>
+							</div>
+							<div>
+								<!-- Forgot password -->
+								<a href="">Forgot password?</a>
+							</div>
+						</div>
+
+						<!-- Sign in button -->
+						<button class="btn btn-info btn-block my-4" type="submit">Sign
+							in</button>
+
+						<!-- Register -->
+						<p>
+							Not a member? <a href="">Register</a>
+						</p>
+
+						<!-- Social login -->
+						<p>or sign in with:</p>
+
+						<a type="button" class="light-blue-text mx-2"> <i
+							class="fa fa-facebook"></i>
+						</a> <a type="button" class="light-blue-text mx-2"> <i
+							class="fa fa-twitter"></i>
+						</a> <a type="button" class="light-blue-text mx-2"> <i
+							class="fa fa-linkedin"></i>
+						</a> <a type="button" class="light-blue-text mx-2"> <i
+							class="fa fa-github"></i>
+						</a>
+
+					</form>
+					<!-- Default form login -->
+				</div>
+			</div>
+		</section>
+
+
+		<div th:replace="footer::footer"></div>
+
+	</div>
+
+
+
+
+
+
+	<div th:replace="commonjs::js"></div>
+
+	<script th:inline="javascript">
+	var u=[[@{/}]];
+	var url=u+"product/getProducts".replace("\\","");
+	var app = angular.module('products', []);
+	var csrfName= [[${_csrf.headerName}]];
+    var  token= [[${_csrf.token}]];
+	app.controller('myControl', function($scope,$http,$location) {
+	
+	 
+	    $scope.productDetail=function (id){			
+	    						window.location.href=(u+"productdetail/"+id).replace("\\","");
+	    					}
+		load($scope,$http,0);
+	    $scope.getContent=function(requestPage){	    	
+	    	load($scope,$http,requestPage);
+	    }
+	});
+	
+	function load($scope,$http,currentPage){
+		 $http.defaults.headers.common[csrfName] = token;
+			$http({  
+
+			    method:'post',  
+
+			    url:url+"?currentPage="+currentPage+"&pageSize=24",  
+
+			    data:{}  
+				
+
+			}).then(function successCallback(req){  			
+				$scope.products=req["data"]["result"]["beans"];
+				$scope.pages=req["data"]["result"];
+				var start=$scope.pages["beginNumber"]+1;
+				var end=$scope.pages["endNumber"]+1;
+				var input=[];
+				for(var i=start;i<end;i++){
+		    		input.push(i);
+		    	}
+				$scope.pageArray=input;			
+			})  
+		
+	}
+	
+	
+	
+	</script>
+</body>
+
+</html>

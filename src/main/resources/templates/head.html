@@ -1,0 +1,93 @@
+<!doctype html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	class="no-js" lang="">
+<head th:fragment="head_link">
+<meta charset="utf-8">
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+
+<meta name="description" content="">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<link rel="manifest" href="site.webmanifest">
+<link rel="apple-touch-icon" href="icon.png">
+<!-- Place favicon.ico in the root directory -->
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/Footer-white.css}">
+ <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+
+
+</head>
+
+<body>
+	<div class="container-fluid" th:fragment="nav" style="padding: 0px">
+
+		<nav class="navbar navbar-expand-lg navbar-light ">
+			<a class="navbar-brand" th:href="@{/index}">Shopping</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				data-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<div class="nav-link">
+							<span style="color: white;" th:text="#{lang.change}+':'"></span>
+							<select id="locales">
+								<option value="en" th:if="${session.local_lang_my==null}"
+									th:text="#{lang.eng}"></option>
+								<option value="zh" th:if="${session.local_lang_my==null}"
+									selected="selected" th:text="#{lang.zh}"></option>
+								<option value="en" th:if="${session.local_lang_my!=null}"
+									th:selected="${#strings.equals(session.local_lang_my,'en')}?'selected':'false'"
+									th:text="#{lang.eng}"></option>
+								<option value="zh" th:if="${session.local_lang_my!=null}"
+									th:selected="${#strings.equals(session.local_lang_my,'zh')}?'selected':'false'"
+									th:text="#{lang.zh}"></option>
+							</select>
+						</div>
+					</li>
+					<li class="nav-item"><a
+						class="nav-link " th:href="@{/cart}"> <i
+							class="fa fa-envelope"></i> 购物车 <span class="sr-only">(current)</span>
+					</a></li>
+					<li class="nav-item" th:if="${session.user==null}"><a
+						th:href="@{/register}" class="nav-link waves-effect waves-light"
+						href="#"> <i class="fa fa-gear"></i> 注册
+					</a></li>
+					<li class="nav-item" th:if="${session.user==null}"><a
+						th:href="@{/login}" class="nav-link waves-effect waves-light"
+						href="#"> <i class="fa fa-gear"></i> 登录
+					</a></li>
+					<li th:if="${session.user!=null}" class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle waves-effect waves-light"
+						id="navbarDropdownMenuLink-4" data-toggle="dropdown"
+						aria-haspopup="true" aria-expanded="true"> <i
+							class="fa fa-user"></i> <span th:text="${session.user.firstName}">Profile</span>
+					</a>
+						<div class="dropdown-menu dropdown-menu-right dropdown-info"
+							aria-labelledby="navbarDropdownMenuLink-4">
+							<a class="dropdown-item waves-effect waves-light"
+								th:href="@{/userinfo}">My account</a> <a
+								class="dropdown-item waves-effect waves-light"
+								th:href="@{/logout}">Log out</a>
+						</div></li>
+				</ul>
+				
+
+			</div>
+		</nav>
+
+
+
+	</div>
+
+</body>
+</html>

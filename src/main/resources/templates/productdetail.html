@@ -1,0 +1,93 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	class="no-js" lang="">
+<head >
+<th:block  th:include="head::head_link"></th:block>
+<meta charset="utf-8">
+<title></title>
+</head>
+
+<body>
+	<!--[if lte IE 9]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+	<div class="container-fluid" ng-app="products"
+		ng-controller="myControl">
+
+	
+		<div th:replace="head::nav"> </div>
+
+		<!-- content starts here -->
+		<section>
+		<div class="row" style="margin-bottom: 20px; margin-top: 20px;">
+			<div class="col-md-8 offset-md-2 justify-content-center"	>
+				
+				</div>
+		</div>
+			<h1 th:text="${product.name}"></h1>	
+		
+		
+		</section>
+
+
+		<div th:replace="footer::footer"></div>
+	
+	</div>
+
+
+
+
+
+
+	<div th:replace="commonjs::js"></div>
+
+	<script th:inline="javascript">
+	var u=[[@{/}]];
+	var url=u+"product/getProducts".replace("\\","");
+	var app = angular.module('products', []);
+	var csrfName= [[${_csrf.headerName}]];
+    var  token= [[${_csrf.token}]];
+	app.controller('myControl', function($scope,$http,$location) {
+	
+	 
+	    $scope.productDetail=function (id){			
+	    						window.location.href=(u+"productdetail/"+id).replace("\\","");
+	    					}
+		load($scope,$http,0);
+	    $scope.getContent=function(requestPage){	    	
+	    	load($scope,$http,requestPage);
+	    }
+	});
+	
+	function load($scope,$http,currentPage){
+		 $http.defaults.headers.common[csrfName] = token;
+			$http({  
+
+			    method:'post',  
+
+			    url:url+"?currentPage="+currentPage+"&pageSize=24",  
+
+			    data:{}  
+				
+
+			}).then(function successCallback(req){  			
+				$scope.products=req["data"]["result"]["beans"];
+				$scope.pages=req["data"]["result"];
+				var start=$scope.pages["beginNumber"]+1;
+				var end=$scope.pages["endNumber"]+1;
+				var input=[];
+				for(var i=start;i<end;i++){
+		    		input.push(i);
+		    	}
+				$scope.pageArray=input;			
+			})  
+		
+	}
+	
+	
+	
+	</script>
+</body>
+
+</html>
