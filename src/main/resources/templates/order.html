@@ -1,0 +1,193 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	class="no-js" lang="">
+<head>
+<th:block th:include="head::head_link"></th:block>
+<meta charset="utf-8">
+<title></title>
+</head>
+
+<body>
+	<!--[if lte IE 9]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+	<div class="container-fluid" ng-app="products"
+		ng-controller="myControl">
+
+
+		<div th:replace="head::nav"></div>
+
+		<!-- content starts here -->
+		<section class="my-2 mt-5">
+				<div class="row ">
+					<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+						<div class="container">
+						<div class="card">
+						<div class="card-header">
+						
+						<h3 class="mb-2">请扫描二维码付款</h3>
+						</div>
+						<div class="card-body">
+						<img ng-src="{{order.payUrl}}">
+						</div>
+						</div>
+						</div>
+					</div>
+
+					<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+						<div class="container">
+						
+						<div class="card">
+						
+							<div class="card-header">
+								Invoice <strong ng-bind="order.date | date:'MM/dd/yyyy h:mma'">01/01/01/2018</strong>
+								<span class="float-right"> <strong>Status:</strong>
+									Pending
+								</span>
+
+							</div>
+							<div class="card-body">
+								<div class="row mb-4">
+									<!-- 	<div class="col-sm-6">
+								<h6 class="mb-3">From:</h6>
+								<div>
+									<strong>Webz Poland</strong>
+								</div>
+								<div>Madalinskiego 8</div>
+								<div>71-101 Szczecin, Poland</div>
+								<div>Email: info@webz.com.pl</div>
+								<div>Phone: +48 444 666 3333</div>
+							</div> -->
+
+									<div class="col-sm-6">
+										<h6 class="mb-3">To:</h6>
+										<div>
+											<strong ng-bind="order.customer.name">Bob Mart</strong>
+										</div>
+										<div ng-bind="'Address: '+order.customer.address">Attn:
+											Daniel Marek</div>
+										<div ng-bind="'Postcode: '+order.customer.postcode">43-190
+											Mikolow, Poland</div>
+										<div ng-bind="'Email: '+order.customer.email">Email:
+											marek@daniel.com</div>
+										<div ng-bind="'Phone: '+order.customer.phone">Phone: +48
+											123 456 789</div>
+									</div>
+
+
+
+								</div>
+
+								<div class="table-responsive-sm">
+									<table class="table table-striped">
+										<thead>
+											<tr>
+												<th class="center">#</th>
+												<th>Item</th>
+												<th>Description</th>
+
+												<th class="right">Unit Cost</th>
+												<th class="center">Qty</th>
+												<th class="right">Total</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr ng-repeat="custom in order.list">
+												<td class="center" ng-bind="$index">1</td>
+												<td class="left strong" ng-bind="custom.product.name">Origin
+													License</td>
+												<td class="left" ng-bind="custom.product.title">Extended
+													License</td>
+
+												<td class="right"
+													ng-bind="'¥'+(custom.product.sellingprice)">$999,00</td>
+												<td class="center" ng-bind="'¥'+custom.qty">1</td>
+												<td class="right" ng-bind="'¥'+(custom.subtotal)">$999,00</td>
+											</tr>
+
+										</tbody>
+									</table>
+								</div>
+								<div class="row">
+									<div class="col-lg-4 col-sm-5"></div>
+
+									<div class="col-lg-4 col-sm-5 ml-auto">
+										<table class="table table-clear">
+											<tbody>
+												<tr>
+													<td class="left"><strong>Subtotal</strong></td>
+													<td class="right" ng-bind="'¥'+order.totalPrice">$8.497,00</td>
+												</tr>
+												<tr>
+													<td class="left"><strong>Discount (0%)</strong></td>
+													<td class="right">0</td>
+												</tr>
+												<tr>
+													<td class="left"><strong>VAT (0%)</strong></td>
+													<td class="right">0</td>
+												</tr>
+												<tr>
+													<td class="left"><strong>Total</strong></td>
+													<td class="right"><strong
+														ng-bind="'¥'+order.totalPrice">$7.477,36</strong></td>
+												</tr>
+											</tbody>
+										</table>
+
+									</div>
+
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+
+
+
+		</section>
+
+
+		<div th:replace="footer::footer"></div>
+
+	</div>
+
+
+
+
+
+
+	<div th:replace="commonjs::js"></div>
+
+	<script th:inline="javascript">
+	var u=[[@{/}]];
+	var url=u+"product/getProducts".replace("\\","");
+	var app = angular.module('products', []);
+	var csrfName= [[${_csrf.headerName}]];
+    var  token= [[${_csrf.token}]];
+	app.controller('myControl', function($scope,$http,$location) {
+	
+	 
+	    $scope.productDetail=function (id){			
+	    						window.location.href=(u+"productdetail/"+id).replace("\\","");
+	    					}
+	    load($scope);
+	 
+	});
+	
+	function load($scope){
+		
+		$scope.order=[[${order}]];
+		
+	}
+	
+	
+	
+	</script>
+</body>
+
+</html>

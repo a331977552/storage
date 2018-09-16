@@ -26,7 +26,7 @@
 <body>
 	<div class="container-fluid" th:fragment="nav" style="padding: 0px">
 
-		<nav class="navbar navbar-expand-lg navbar-light ">
+		<nav class="navbar navbar-expand-lg  navbar-light bg-light ">
 			<a class="navbar-brand" th:href="@{/index}">Shopping</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse"
 				data-target="#navbarSupportedContent"
@@ -39,7 +39,7 @@
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item active">
 						<div class="nav-link">
-							<span style="color: white;" th:text="#{lang.change}+':'"></span>
+							<span style="color:gray;" th:text="'Lang:'"></span>
 							<select id="locales">
 								<option value="en" th:if="${session.local_lang_my==null}"
 									th:text="#{lang.eng}"></option>
@@ -56,7 +56,7 @@
 					</li>
 					<li class="nav-item"><a
 						class="nav-link " th:href="@{/cart}"> <i
-							class="fa fa-envelope"></i> 购物车 <span class="sr-only">(current)</span>
+							class="fa fa-shopping-cart"></i> 购物车 <span class="sr-only">(current)</span>
 					</a></li>
 					<li class="nav-item" th:if="${session.user==null}"><a
 						th:href="@{/register}" class="nav-link waves-effect waves-light"
@@ -75,7 +75,7 @@
 						<div class="dropdown-menu dropdown-menu-right dropdown-info"
 							aria-labelledby="navbarDropdownMenuLink-4">
 							<a class="dropdown-item waves-effect waves-light"
-								th:href="@{/userinfo}">My account</a> <a
+								th:href="@{/userprofile}">My account</a> <a
 								class="dropdown-item waves-effect waves-light"
 								th:href="@{/logout}">Log out</a>
 						</div></li>

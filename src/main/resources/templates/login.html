@@ -8,7 +8,7 @@
 <title></title>
 </head>
 
-<body>
+<body class="bg-light">
 	<!--[if lte IE 9]>
     <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
   <![endif]-->
@@ -19,19 +19,24 @@
 		<div th:replace="head::nav"></div>
 
 		<!-- content starts here -->
-		<section>
+		<section class="my-2  mt-5">
 
 			<div class="row my-5">
 				<div class="col-md-4 offset-md-4  my-5">
-
+<div class="card card-outline-secondary">
+                        <div class="card-header">
+                            <h3 class="mb-0">Sign In</h3>
+                        </div>
+                        <div class="card-body">
+                      
 					<!-- Default form login -->
 					<form method="post" th:action="@{/userlogin}" class="text-center border border-light p-5">
 
-						<p class="h4 mb-4">Sign in</p>
 
+   				<p class="h4 mb-4">登录</p>
 						<!-- Email -->
 						<input type="email" name="email" id="defaultLoginFormEmail"
-							class="form-control mb-4" placeholder="E-mail">
+							class="form-control mb-4" th:value="${param.email}" placeholder="E-mail">
 
 						<!-- Password -->
 						<input type="password" name="password" id="defaultLoginFormPassword"
@@ -55,7 +60,7 @@
 						</div>
 
 						<!-- Sign in button -->
-						<button class="btn btn-info btn-block my-4" type="submit">Sign
+						<button class="btn btn-primary btn-block my-4" type="submit">Sign
 							in</button>
 
 						<!-- Register -->
@@ -77,6 +82,9 @@
 						</a>
 
 					</form>
+					</div>
+					</div>
+					
 					<!-- Default form login -->
 				</div>
 			</div>

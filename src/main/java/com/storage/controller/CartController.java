@@ -35,13 +35,14 @@ public class CartController {
 	@Autowired
 	CartRemoteService service;
 	
+	@SuppressWarnings("unused")
 	@RequestMapping("/add")
 	public Object addCart(HttpServletRequest request,HttpServletResponse response,@RequestBody List<CustomCart> list) {
 		Cart cart=new Cart();
 		cart.setItems(JsonUtils.objectToJson(list));
 		Object attribute = request.getSession().getAttribute("user");		
 		String cookieValue = CookieUtils.getCookieValue(request, cartName,true);
-		if(attribute==null) {
+		if(true) {
 			if(StringUtils.isEmpty(cookieValue)) {				
 				cookieValue=cart.getItems();
 				CookieUtils.setCookie(request, response, cartName, cookieValue,true);	
@@ -58,23 +59,22 @@ public class CartController {
 		{
 			Customer user=(Customer) attribute;
 			cart.setUserId(user.getId());
+			StorageResult<Cart> result;
 			if(StringUtils.isEmpty(cookieValue)) {
-				service.addCart(cart);
+				result = service.merge(cart);
 				
 			}else {
 				String items = cart.getItems();	
 				//merge locally
-				List<CustomCart> jsonToList = JsonUtils.jsonToList(items, CustomCart.class);
-				List<CustomCart> jsonToList2 = JsonUtils.jsonToList(cookieValue, CustomCart.class);				
-				String merge = merge(jsonToList,jsonToList2);
-				cart.setItems(merge);
+				
+				cart.setItems(items);
 				//add merged result to the user in database;
-				service.addCart(cart);
+				result=service.merge(cart);
 				//get the result	
 			}			
-			StorageResult<Cart> findByUserId = service.findByUserId(user.getId());
-			if(findByUserId.isSuccess()) {
-				CookieUtils.setCookie(request, response, cartName, findByUserId.getResult().getItems(),3600*24*31,true);					
+		
+			if(result.isSuccess()) {
+				CookieUtils.setCookie(request, response, cartName, result.getResult().getItems(),3600*24*31,true);					
 			}		
 			return StorageResult.succeed(cart);
 		}

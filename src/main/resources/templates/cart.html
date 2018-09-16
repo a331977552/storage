@@ -8,7 +8,7 @@
 <title></title>
 </head>
 
-<body>
+<body class="bg-light">
 	<!--[if lte IE 9]>
     <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
   <![endif]-->
@@ -17,10 +17,10 @@
 
 
 		<div th:replace="head::nav"></div>
-
+	
 		<!-- content starts here -->
-		<section>
-			<div>
+		<section class="my-2">
+			<div >
 				<nav aria-label="breadcrumb">
 					<ol class="breadcrumb">
 						<li class="breadcrumb-item"><a th:href="@{/index}"
@@ -36,53 +36,66 @@
 					<h1 th:text="#{breadcrumb.shoppingcart}"></h1>
 				</div>
 			</div>
-			<div class="row" style="margin-top: 40px;">
-
-				<div class="col-md-8 offset-md-2" >
-
-					<div class="table-responsive">
-						<table   class="table table-hover text-center"
-							style="font-size: 1.2em;">
-							<thead>
-								<tr>
-									<th scope="col"><button class="btn btn-danger btn-sm"
-											th:text="#{common.delete}">Delete</button></th>
-									<th scope="col">name</th>
-									<th scope="col" th:text="#{cart.price}">price</th>
-									<th scope="col">quantity</th>
-									<th scope="col">subtotal</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr th:each="item,stat:${items}">
-									<td><input type="checkbox"
-										 value="" style="transform:scale(1.5)"></td>
-									<td ><div >
-										<span style="vertical-align: top;" th:text="${products[stat.index].product.name}"></span>
-										<img  th:src="${products[stat.index].imgs[0].url+'?widht=100&height=100'}">
-									</div></td>
-									<td  th:text="${products[stat.index].product.sellingprice}/100">price</td>
-									<td th:text="${item.quantity}">Mark</td>
-									<td
-										th:text="${products[stat.index].product.sellingprice}/100*${item.quantity}">Otto</td>
-								</tr>
-
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-8 offset-md-2" align="right">
-					<div class=" mb-3" style="max-width: 18rem;">
-						
-							<h5 class="card-title" th:text="#{cart.totalPrice}" >总价:</h5>
-							<p class="card-text"></p>
-								 <a href="#" class="btn btn-primary" th:text="#{cart.submit.order}">提交订单</a>
-					
-					</div>
-				</div>
-			</div>
+			
+		
+			
+			<div class="container py-5 mt-5">
+    <div class="row">
+        <div class="col-md-8 col-sm-12 col-xs-12">
+            <div class="row justify-content-between">
+                <h6>Items in your cart</h6>
+                <small class="text-muted">5 items</small>
+            </div>
+            <table class="table table-responsive">
+                <tbody>
+                  
+                  
+                 
+                    <tr ng-repeat="item in items">
+                        <td>
+                            <img ng-src="{{products[$index].imgs[0].url+'?widht=120&height=120'}}" width="120px;" height="120px;">
+                        </td>
+                        <td>
+                            <h6 class="mb-0 d-inline" ng-bind="products[$index].product.name">Product Name - Model</h6>
+                            <!-- <small class="text-muted">RPI-1510</small> -->
+                            <p class="mb-0 text-muted" ng-bind="'¥'+products[$index].product.sellingprice/100"></p>
+                            <form class="form-inline">
+                                <input class="form-control form-control-sm" id="inputQty" type="number" min="1" ng-change="quantityChange(item,products[$index].product.quantity)"  ng-model="item.quantity"  >
+                                <label for="inputQty" class="form-control-label">&nbsp; Qty</label>
+                            </form>
+                            <a class="small text-muted" href="#" ng-click="deleteItems($index)"><i class="fa fa-trash-o"></i> Remove item</a>
+                        </td>
+                        <td>
+                            <p ng-bind="'¥'+(products[$index].product.sellingprice/100*item.quantity).toFixed(2)">$59.98</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr>
+            <div class="row justify-content-between mb-3">
+                <a class="btn btn-outline-success" th:href="@{/index}"><i class="fa fa-arrow-left"></i>&nbsp; Continue shopping</a>
+               <!--  <a class="btn btn-secondary" href="#">Cancel</a> -->
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-12 col-xs-12">
+            <div class="card mb-3 text-right">
+                <div class="card-header"><i class="fa fa-shopping-cart"></i> Cart Summary</div>
+                <div class="card-body">
+                    <h4 class="card-title mb-0" ng-bind="'¥'+totalPrice">$120.00</h4>
+                    <p class="card-text small" th:text="#{cart.totalPrice}">Total</p>
+                    <button  class="btn btn-success" ng-click="checkout()" ng-disabled="items.length==0 || items==null" th:text="#{cart.submit.order}">Checkout</button>
+                </div>
+            </div>
+            <div class="card text-right">
+                <div class="card-header"><i class="fa fa-comments-o"></i> Support</div>
+                <div class="card-body">
+                    <h6 class="card-title mb-0"><i class="fa fa-phone"></i> (+94)-123-456-789</h6>
+                    <p class="card-text small text-muted" th:text="#{cart.support.phone}">Please contact with us if you have any questions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 		</section>
 
 
@@ -96,7 +109,7 @@
 
 
 	<div th:replace="commonjs::js"></div>
-
+	<script type="text/javascript" th:src="@{/js/js.cookie.js}"></script>
 	<script th:inline="javascript">
 	var u=[[@{/}]];
 	var url=u+"product/getProducts".replace("\\","");
@@ -104,42 +117,57 @@
 	var csrfName= [[${_csrf.headerName}]];
     var  token= [[${_csrf.token}]];
 	app.controller('myControl', function($scope,$http,$location) {
+		 init($scope);
 	
-	 
+		$scope.quantityChange=function(item,quantity){
+			if(item.quantity>quantity){
+				item.quantity=quantity;	
+				alert("没有库存了");
+			}
+			Cookies.set("shopping_cart_tt",angular.toJson($scope.items),{ expires: 31 });		
+			updatePrice($scope);
+		}
+		
+		 $scope.checkout=function (){			
+				window.location.href=(u+"checkout").replace("\\","");
+			}
 	    $scope.productDetail=function (id){			
 	    						window.location.href=(u+"productdetail/"+id).replace("\\","");
 	    					}
-		load($scope,$http,0);
-	    $scope.getContent=function(requestPage){	    	
-	    	load($scope,$http,requestPage);
-	    }
-	});
-	
-	function load($scope,$http,currentPage){
-		 $http.defaults.headers.common[csrfName] = token;
-			$http({  
-
-			    method:'post',  
-
-			    url:url+"?currentPage="+currentPage+"&pageSize=24",  
-
-			    data:{}  
-				
-
-			}).then(function successCallback(req){  			
-				$scope.products=req["data"]["result"]["beans"];
-				$scope.pages=req["data"]["result"];
-				var start=$scope.pages["beginNumber"]+1;
-				var end=$scope.pages["endNumber"]+1;
-				var input=[];
-				for(var i=start;i<end;i++){
-		    		input.push(i);
-		    	}
-				$scope.pageArray=input;			
-			})  
+	  
+	    $scope.deleteItems=function ($index){
 		
+
+			$scope.items.splice($index,1);
+			$scope.products.splice($index,1);
+	    	
+	    	Cookies.set("shopping_cart_tt",angular.toJson($scope.items),{ expires: 31 });
+		
+	    	
+	    	$scope.deleteItem=true;	   	     	
+	    	updatePrice($scope);
+	    }
+	   	
+	});
+	function init($scope){
+		
+		var products=[[${products}]];
+		var items=[[${items}]];
+		$scope.products=products;
+		$scope.items=items;
+		$scope.totalPrice=0;
+		updatePrice($scope);
+		
+	}	
+	function updatePrice($scope){
+		$scope.totalPrice=0;
+		for(var i in $scope.items){
+			var quan=$scope.items[i].quantity;
+			$scope.totalPrice+= $scope.products[i].product.sellingprice/100*quan;
+		}
+		$scope.totalPrice=$scope.totalPrice.toFixed(2);
 	}
-	
+
 	
 	
 	</script>

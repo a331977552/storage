@@ -2,16 +2,13 @@ package com.storage.remote.service;
 
 import java.util.List;
 
-import org.hibernate.validator.constraints.EAN;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.storage.entity.Customer;
 import com.storage.entity.Manager;
 import com.storage.entity.custom.StorageResult;
 
@@ -28,6 +25,8 @@ public interface ManagerRemoteService {
 
 	@GetMapping("/manager/get/{id}")
 	StorageResult<Manager>   getManager(@PathVariable(name = "id") Integer id);
+	@GetMapping("/manager/getOne")
+	StorageResult<Manager>   getOne();
 
 	@GetMapping("/manager/delete/{id}")
 	StorageResult<Manager>   deleteManagerById(@PathVariable(name = "id") Integer id);

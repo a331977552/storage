@@ -1,0 +1,221 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	class="no-js" lang="">
+<head >
+<th:block  th:include="head::head_link"></th:block>
+<meta charset="utf-8">
+<title></title>
+</head>
+
+<body class="bg-light">
+	<!--[if lte IE 9]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+	<div class="container-fluid" ng-app="products"
+		ng-controller="myControl">
+
+	
+		<div th:replace="head::nav"> </div>
+
+		<!-- content starts here -->
+		<section >
+		<div class="container">
+		<div class="py-5 text-center">
+        <h1>Checkout </h1>
+      </div>
+		
+		
+		<div class="row">
+        <div class="col-md-4 order-md-2 mb-4">
+          <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-muted">Your cart</span>
+            <span class="badge badge-secondary badge-pill" ng-bind="items.length">3</span>
+          </h4>
+          <ul class="list-group mb-3">
+            <li  ng-repeat="item in items" class="list-group-item d-flex justify-content-between lh-condensed">
+              <div>
+                <h6 ng-bind="products[$index].product.name" class="my-0">Product name</h6>
+                <small  ng-bind="'Qty: '+item.quantity" class="text-muted">Brief description</small>
+              </div>
+              <span class="text-muted"  ng-bind="'¥'+(products[$index].product.sellingprice/100*item.quantity).toFixed(2)">$12</span>
+            </li>
+           
+          <!--   <li class="list-group-item d-flex justify-content-between bg-light">
+              <div class="text-success">
+                <h6 class="my-0">Promo code</h6>
+                <small>EXAMPLECODE</small>
+              </div>
+              <span class="text-success">-$5</span>
+            </li> -->
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Total (USD)</span>
+              <strong ng-bind="'¥'+totalPrice">$20</strong>
+            </li>
+          </ul>
+
+          <form class="card p-2" >
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Promo code">
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-secondary">Redeem</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="col-md-8 order-md-1">
+          <h4 class="mb-3" th:text="#{checkout.form.title}">Billing address</h4>
+          <form id="checkOutForm" class="needs-validation" novalidate="" th:action="@{/order}" method="post" >
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="firstName" th:text="#{checkout.firstName}">First name</label>
+                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="" th:value="${user}!=null?${user.firstName}" required="">
+                <div class="invalid-feedback"  th:text="#{checkout.validation.firstName}">
+                  Valid first name is required.
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="lastName" th:text="#{checkout.lastName}">Last name</label>
+                <input type="text" class="form-control"  id="lastName"  name="lastName" placeholder="" th:value="${user}!=null?${user.lastName}" required="">
+                <div class="invalid-feedback" th:text="#{checkout.validation.lastName}">
+                  Valid last name is required.
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="phoneNumber" th:text="#{checkout.phone}"  >Phone number</label>
+     
+                <input type="number" class="form-control" id="phoneNumber" name="phone" th:value="${user}!=null?${user.phone}" th:placeholder="#{checkout.phone}" required="">
+                <div class="invalid-feedback" th:text="#{checkout.validation.phone}" style="width: 100%;">
+                  Your phone number is required.
+                </div>
+          
+            </div>
+
+            <div class="mb-3">
+              <label for="email" th:text="#{checkout.email}">Email <span class="text-muted">(Optional)</span></label>
+              <input type="email" class="form-control" id="email" name="email"  th:value="${user}!=null?${user.email}"  placeholder="you@example.com">
+              <div class="invalid-feedback" th:text="#{checkout.validation.email}">
+                Please enter a valid email address for shipping updates.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="address">Address</label>
+              <input type="text" class="form-control" id="address" name="address"  th:value="${user}!=null?${user.address}"  placeholder="" required="">
+              <div class="invalid-feedback"  th:text="#{checkout.validation.address}">
+                Please enter your shipping address.
+              </div>
+            </div>
+
+        <div class="mb-3">
+              <label for="postcode">Post code </label>
+              <input type="text" class="form-control" id="postcode" name="postcode" placeholder="" required="">
+           	    <div class="invalid-feedback"  th:text="#{checkout.validation.postcode}">
+                Please enter your post code address.
+              </div>
+            </div>
+    		<div class="mb-3">
+              <label for="comment">comment </label>
+              <textarea form="checkOutForm"  class="form-control" value="" name="comment" id="comment" placeholder="">
+           	   </textarea>
+            </div>
+          
+            <hr class="mb-4">
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="save-info">
+              <label class="custom-control-label" for="save-info">Save this information for next time</label>
+            </div>
+            <hr class="mb-4">
+
+            <h4 class="mb-3">Payment</h4>
+
+            <div class="d-block my-3">
+              <div class="custom-control custom-radio">
+                <input id="credit" name="paymentMethod" type="radio" value="Wechat" class="custom-control-input" checked="" required="">
+                <label class="custom-control-label" for="credit" th:text=#{checkout.payment.wechat}>Wechat</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input id="debit" name="paymentMethod" type="radio" value="Alipay" class="custom-control-input" required="">
+                <label class="custom-control-label" for="debit"  th:text=#{checkout.payment.alipay}>Alipay</label>
+              </div>
+     
+            </div>
+     
+            <hr class="mb-4">
+            <button class="btn btn-primary btn-lg btn-block" ng-disabled="products.length==0" type="submit" th:text=#{checkout.checkout.button}>Continue to checkout</button>
+          </form>
+        </div>
+      </div></div>
+		</section>
+		<hr class="my-4">
+
+		<div th:replace="footer::footer"></div>
+	
+	</div>
+
+
+
+
+
+
+	<div th:replace="commonjs::js"></div>
+	<script type="text/javascript" th:src="@{js/js.cookie.js}"></script>
+  <script>
+      // Example starter JavaScript for disabling form submissions if there are invalid fields
+      (function() {
+        'use strict';
+
+        window.addEventListener('load', function() {
+          // Fetch all the forms we want to apply custom Bootstrap validation styles to
+          var forms = document.getElementsByClassName('needs-validation');
+
+          // Loop over them and prevent submission
+          var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+              if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+              form.classList.add('was-validated');
+            }, false);
+          });
+        }, false);
+      })();
+    </script>
+	<script th:inline="javascript">
+	var u=[[@{/}]];
+	var url=u+"product/getProducts".replace("\\","");
+	var app = angular.module('products', []);
+	var csrfName= [[${_csrf.headerName}]];
+    var  token= [[${_csrf.token}]];
+	app.controller('myControl', function($scope,$http,$location) {
+	   init($scope);
+	});
+	function init($scope){
+		
+		var products=[[${products}]];
+		var items=[[${items}]];
+		$scope.products=products;
+		$scope.items=items;
+		$scope.totalPrice=0;
+		updatePrice($scope);
+		
+	}	
+	function updatePrice($scope){
+		$scope.totalPrice=0;
+		for(var i in $scope.items){
+			var quan=$scope.items[i].quantity;
+			$scope.totalPrice+= $scope.products[i].product.sellingprice/100*quan;
+		}
+		$scope.totalPrice=$scope.totalPrice.toFixed(2);
+	}
+	
+	
+	
+	</script>
+</body>
+
+</html>

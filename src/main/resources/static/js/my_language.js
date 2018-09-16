@@ -17,7 +17,11 @@
 						href=href.replace(reg,"lang="+selectedOption);
 						window.location.replace(href);
 					}else{
-						window.location.replace(href+'?lang=' + selectedOption);						
+						if(href.indexOf("?")!=-1){
+							window.location.replace(href+'&lang=' + selectedOption);													
+						}else{
+							window.location.replace(href+'?lang=' + selectedOption);													
+						}
 					}
 		           
 		        }

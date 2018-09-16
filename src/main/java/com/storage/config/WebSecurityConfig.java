@@ -43,7 +43,7 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
 
 		http.authorizeRequests().antMatchers("/manager/login").permitAll().antMatchers("/**").
 		permitAll().and().formLogin().loginPage("/login").loginProcessingUrl("/manager/login").successHandler(new SimpleLoginSuccessHandler())
-		.permitAll().and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+		.permitAll().and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/my_logout")
 		.deleteCookies("JSESSIONID")
 		.invalidateHttpSession(true).and().rememberMe().tokenValiditySeconds(3600*24);
 		
