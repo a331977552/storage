@@ -1,5 +1,6 @@
 package com.storage.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,29 +21,29 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
 	//		auth.inMemoryAuthentication().withUser("dba").password("root123").roles("ADMIN","DBA");
 	//	}
 
-	/*@Autowired
-	ManagerDetailService userdetailService;*/
+	@Autowired
+	CustomerDetailService userdetailService;
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web
 		.ignoring()
-		.antMatchers("/static/**","/bower_components/**","/dist/**","/plugins/**");
+		.antMatchers("/static/**","/dist/**","/plugins/**");
 	}
 
-	/*@Autowired
+	@Autowired
 	MyAuthenticationProvider authenticationprovider;
-*/
+
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		/*auth.userDetailsService(this.userdetailService);
+		auth.userDetailsService(this.userdetailService);
 		auth.authenticationProvider(this.authenticationprovider);
-*/
+
 	}
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
-		http.authorizeRequests().antMatchers("/manager/login").permitAll().antMatchers("/**").
-		permitAll().and().formLogin().loginPage("/login").loginProcessingUrl("/manager/login").successHandler(new SimpleLoginSuccessHandler())
+		http.authorizeRequests().antMatchers("/**").
+		permitAll().and().formLogin().loginPage("/login").loginProcessingUrl("/login").successHandler(new SimpleLoginSuccessHandler())
 		.permitAll().and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/my_logout")
 		.deleteCookies("JSESSIONID")
 		.invalidateHttpSession(true).and().rememberMe().tokenValiditySeconds(3600*24);
