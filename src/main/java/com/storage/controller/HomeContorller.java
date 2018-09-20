@@ -168,6 +168,7 @@ public class HomeContorller {
 			StorageResult<Customer> addCustomer = customerService.login(customer);
 			if (addCustomer.isSuccess()) {
 				Customer result = addCustomer.getResult();
+				result.setPassword("");
 				if (result.getId() != null) {
 					request.getSession().setMaxInactiveInterval(3600 * 24);
 					request.getSession().setAttribute("user", result);
@@ -333,6 +334,8 @@ public class HomeContorller {
 				String objectToJson = JsonUtils.objectToJson(jsonToList);
 				CookieUtils.setCookie(request, response, cartName, objectToJson, true);
 			}
+			StorageResult<Setting> setting2 = settingRemoteService.getSetting();
+			model.addObject("setting",setting2.getResult());
 			model.addObject("items", jsonToList);
 			model.addObject("products", products);
 		}
@@ -343,8 +346,9 @@ public class HomeContorller {
 	}
 
 	@RequestMapping(value = { "/userprofile" })
-	public ModelAndView userprofile(ModelAndView model) {
-
+	public ModelAndView userprofile(HttpSession session,ModelAndView model) {
+		Object attribute = session.getAttribute("user");
+		model.addObject("user",attribute);
 		model.setViewName("userprofile");
 		return model;
 	}

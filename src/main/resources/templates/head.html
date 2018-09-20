@@ -55,16 +55,20 @@
 						</div>
 					</li>
 					<li class="nav-item"><a
-						class="nav-link " th:href="@{/cart}"> <i
-							class="fa fa-shopping-cart"></i> 购物车 <span class="sr-only">(current)</span>
+						class="nav-link " th:href="@{/cart}">
+		
+
+
+						 <i
+							class="fa fa-shopping-cart"></i> <span th:text="#{index.shopping.cart}">购物车</span> <span class="sr-only">(current)</span>
 					</a></li>
 					<li class="nav-item" th:if="${session.user==null}"><a
 						th:href="@{/register}" class="nav-link waves-effect waves-light"
-						href="#"> <i class="fa fa-gear"></i> 注册
+						href="#"> <i class="fa fa-user-plus"></i> <span th:text="#{index.shopping.register}">注册</span>
 					</a></li>
 					<li class="nav-item" th:if="${session.user==null}"><a
 						th:href="@{/login}" class="nav-link waves-effect waves-light"
-						href="#"> <i class="fa fa-gear"></i> 登录
+						href="#"> <i class="fa fa-user"></i> <span th:text="#{index.shopping.login}"> 登录</span>
 					</a></li>
 					<li th:if="${session.user!=null}" class="nav-item dropdown"><a
 						class="nav-link dropdown-toggle waves-effect waves-light"
