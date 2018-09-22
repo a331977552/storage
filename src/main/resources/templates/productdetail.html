@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
 	class="no-js" lang="">
-<head >
-<th:block  th:include="head::head_link"></th:block>
+<head>
+<th:block th:include="head::head_link"></th:block>
 <meta charset="utf-8">
 <title></title>
 </head>
@@ -15,24 +15,121 @@
 	<div class="container-fluid" ng-app="products"
 		ng-controller="myControl">
 
-	
-		<div th:replace="head::nav"> </div>
+
+		<div th:replace="head::nav"></div>
 
 		<!-- content starts here -->
 		<section class="my-2  mt-5">
-		<div class="row" style="margin-bottom: 20px; margin-top: 20px;">
-			<div class="col-md-8 offset-md-2 justify-content-center"	>
-				
+			<div>
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a th:href="@{/index}"
+							th:text="#{common.home}">Home</a></li>
+
+						<li class="breadcrumb-item active" aria-current="page"
+							th:text="#{breadcrumb.product.detail}">Detail</li>
+					</ol>
+				</nav>
+			</div>
+			<div class="container py-5">
+
+
+				<div class="row">
+					<div class="col-md-4">
+						<div class="row">
+							<img class="img-fluid" ng-src="{{imgs[0].url}}">
+						</div>
+
+						<div class="row mt-2">
+							<small>Tags &nbsp;</small> <a class=" mx-1 badge badge-secondary"
+								th:href="@{/index}+'?category='+${category.id}"
+								th:text=${category.name}></a>
+
+						</div>
+					</div>
+					<div class="col-md-8">
+						<h4 ng-bind="product.name"></h4>
+						<small class="text-muted" ng-bind="'quantity: '+product.quantity">RPI-1510</small>
+						<div class="small text-warning">
+							<i class="fa fa-star"></i><i class="fa fa-star"></i><i
+								class="fa fa-star"></i><i class="fa fa-star"></i><i
+								class="fa fa-star"></i><span> 5 stars</span>
+						</div>
+						<small>Availability: <span class="text-primary">In
+								Stock</span></small> <br>
+						<h4 class="d-inline" ng-bind="product.sellingprice_"></h4>
+						<small class="text-muted"><sup></sup></small>
+						<hr>
+						<h6>Quick Overview:</h6>
+						<small ng-bind="product.title"></small>
+						<hr>
+						<form>
+							<div class="form-group row">
+								<div class="col-2">
+									<input class="form-control form-control-sm" type="number"
+										id="inputQuantity" style="text-align: right;" min="1" max="10"
+										value="1">
+								</div>
+								<label for="inputQuantity" class="col-1 col-form-label">Quantity</label>
+							</div>
+							<button class="btn btn-success btn-sm mr-2" type="submit">
+								<i class="fa fa-shopping-cart"></i>&nbsp; Add to Cart
+							</button>
+							<button class="btn btn-success btn-sm" type="submit">
+								<i class="fa fa-heart-o"></i>&nbsp; Add to Wishlist
+							</button>
+						</form>
+					</div>
 				</div>
-		</div>
-			<h1 th:text="${product.name}"></h1>	
-		
-		
+				<div class="row my-4 mx-0 px-0 ">
+					<div class="col-12 mx-0 px-0">
+						<ul class="nav nav-tabs" id="myTab" role="tablist">
+							<li class="nav-item"><a class="nav-link active"
+								id="home-tab" data-toggle="tab" href="#home" role="tab"
+								aria-controls="home" aria-selected="true">description</a></li>
+							<li class="nav-item"><a class="nav-link" id="profile-tab"
+								data-toggle="tab" href="#profile" role="tab"
+								aria-controls="profile" aria-selected="false">additional
+									information</a></li>
+							<li class="nav-item"><a class="nav-link" id="contact-tab"
+								data-toggle="tab" href="#contact" role="tab"
+								aria-controls="contact" aria-selected="false">Contact</a></li>
+						</ul>
+						<div class="tab-content" id="myTabContent">
+							<div class="tab-pane fade show active" id="home" role="tabpanel"
+								aria-labelledby="home-tab" ng-bind-html="product.content"></div>
+							<div class="tab-pane fade" id="profile" role="tabpanel"
+								aria-labelledby="profile-tab">...</div>
+							<div class="tab-pane fade" id="contact" role="tabpanel"
+								aria-labelledby="contact-tab">...</div>
+						</div>
+					</div>
+				</div>
+				<div class="row mb-2">
+					<h6>Related Products</h6>
+				</div>
+
+				<div class="row">
+
+					<a href="#"><img class="mx-3 img-fluid"
+						src="//placehold.it/120x120"></a> <a href="#"><img
+						class="mx-3 img-fluid" src="//placehold.it/120x120"></a> <a
+						href="#"><img class="mx-3 img-fluid"
+						src="//placehold.it/120x120"></a> <a href="#"><img
+						class="mx-3 img-fluid" src="//placehold.it/120x120"></a> <a
+						href="#"><img class="mx-3 img-fluid"
+						src="//placehold.it/120x120"></a> <a href="#"><img
+						class="mx-3 img-fluid" src="//placehold.it/120x120"></a>
+				</div>
+			</div>
+
+
+
 		</section>
 
 
 		<div th:replace="footer::footer"></div>
-	
+
 	</div>
 
 
@@ -48,42 +145,15 @@
 	var app = angular.module('products', []);
 	var csrfName= [[${_csrf.headerName}]];
     var  token= [[${_csrf.token}]];
-	app.controller('myControl', function($scope,$http,$location) {
+	app.controller('myControl', function($scope,$http,$location,$sce) {
+	$scope.product=[[${product}]];
+	$scope.product.content=$sce.trustAsHtml($scope.product.content);
+	 $scope.imgs=[[${imgs}]];
+	 $scope.category=[[${category}]];
 	
-	 
-	    $scope.productDetail=function (id){			
-	    						window.location.href=(u+"productdetail/"+id).replace("\\","");
-	    					}
-		load($scope,$http,0);
-	    $scope.getContent=function(requestPage){	    	
-	    	load($scope,$http,requestPage);
-	    }
 	});
 	
-	function load($scope,$http,currentPage){
-		 $http.defaults.headers.common[csrfName] = token;
-			$http({  
-
-			    method:'post',  
-
-			    url:url+"?currentPage="+currentPage+"&pageSize=24",  
-
-			    data:{}  
-				
-
-			}).then(function successCallback(req){  			
-				$scope.products=req["data"]["result"]["beans"];
-				$scope.pages=req["data"]["result"];
-				var start=$scope.pages["beginNumber"]+1;
-				var end=$scope.pages["endNumber"]+1;
-				var input=[];
-				for(var i=start;i<end;i++){
-		    		input.push(i);
-		    	}
-				$scope.pageArray=input;			
-			})  
-		
-	}
+	
 	
 	
 	

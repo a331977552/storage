@@ -65,7 +65,13 @@ public class ProductController {
 		return result.getBody();
 	}
 
-	
+	@RequestMapping("/getbestsellingproduct")
+	@ResponseBody
+	public Object getBestSellingProduct(@RequestParam("category")Integer categoryId) {
+		ResponseEntity<String> result = this.productService.getBestSellingProduct(categoryId);
+
+		return result.getBody();
+	}
 	
 	
 }

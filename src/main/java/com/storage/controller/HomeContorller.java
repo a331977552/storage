@@ -24,6 +24,7 @@ import com.storage.entity.Carousel;
 import com.storage.entity.Cart;
 import com.storage.entity.Category;
 import com.storage.entity.Customer;
+import com.storage.entity.Product;
 import com.storage.entity.ProductDetail;
 import com.storage.entity.Setting;
 import com.storage.entity.StOrder;
@@ -224,14 +225,27 @@ public class HomeContorller {
 			ModelAndView model) {
 
 		ResponseEntity<String> productById = this.productService.getProduct(productId);
+		
 		if (productById.getBody() == null) {
 			model.setViewName("redirect:/index");
 		} else {
 
 			String body = productById.getBody();
 			ProductDetail jsonToPojo = JsonUtils.jsonToPojo(body, ProductDetail.class);
-			model.addObject("product", jsonToPojo.getProduct());
+			Product product = jsonToPojo.getProduct();
+			Integer category2 = product.getCategory();
+			
+			model.addObject("product",product );
 			model.addObject("imgs", jsonToPojo.getImgs());
+			List<Category> categories = jsonToPojo.getCategories();
+			for (Category category : categories) {
+				Integer id = category.getId();
+				if(id==category2) {
+					model.addObject("category",category);
+					break;
+				}
+			}
+	
 			model.setViewName("productdetail");
 		}
 		return model;

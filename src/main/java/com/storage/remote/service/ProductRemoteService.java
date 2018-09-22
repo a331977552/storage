@@ -46,5 +46,7 @@ public interface ProductRemoteService {
 	@RequestMapping("/product/getProductByExample")
 //	StorageResult<List<CustomeProductName>> 
 	ResponseEntity<String> getProductByExample(@RequestBody String jsonToList);
+	@RequestMapping("/product/getbestsellingproduct")	
+	ResponseEntity<String> getBestSellingProduct(@RequestParam("category") Integer categoryId);
 	
 }
