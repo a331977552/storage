@@ -1,15 +1,13 @@
 package com.storage.remote.service;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import com.storage.entity.Customer;
-import com.storage.entity.Setting;
 import com.storage.entity.StOrder;
 import com.storage.entity.custom.OrderWrap;
 import com.storage.entity.custom.StorageResult;
@@ -29,5 +27,7 @@ public interface StOrderRemoteService {
 	StorageResult<Long>  count();
 	@RequestMapping("/stOrder/createOrder")
 	OrderWrap  creaOrder(@RequestBody()OrderWrap result);
+	@RequestMapping("/stOrder/findAllOrderByUserid/{id}")
+	ResponseEntity<String> findAllOrderByUserId(@PathVariable(name="id")Integer id);
 
 }

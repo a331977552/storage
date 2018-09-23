@@ -35,7 +35,7 @@ public interface CustomerRemoteService {
 	StorageResult<Customer>  deleteCustomerById(Integer id);
 
 	@PostMapping("/customer/update")
-	StorageResult<Customer>  updateCustomer(@RequestBody Customer customer);
+	StorageResult  updateCustomer(@RequestBody Customer customer);
 
 	@GetMapping("/customer/count")
 	StorageResult<Long>  count();

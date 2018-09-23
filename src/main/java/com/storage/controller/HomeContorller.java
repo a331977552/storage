@@ -64,6 +64,10 @@ public class HomeContorller {
 	StOrderRemoteService remoteService;
 	
 	@Autowired
+	StOrderRemoteService orderService;
+	
+	
+	@Autowired
 	SettingRemoteService settingRemoteService;
 	
 	@Autowired
@@ -238,14 +242,15 @@ public class HomeContorller {
 			model.addObject("product",product );
 			model.addObject("imgs", jsonToPojo.getImgs());
 			List<Category> categories = jsonToPojo.getCategories();
-			for (Category category : categories) {
+			for (Category category : categories) {	
 				Integer id = category.getId();
 				if(id==category2) {
 					model.addObject("category",category);
 					break;
 				}
 			}
-	
+			ResponseEntity<String> bestSellingProduct = this.productService.getBestSellingProduct(category2);
+			model.addObject("recommendedProducts",JsonUtils.jsonToList(bestSellingProduct.getBody(),Product.class));
 			model.setViewName("productdetail");
 		}
 		return model;
@@ -362,8 +367,16 @@ public class HomeContorller {
 	@RequestMapping(value = { "/userprofile" })
 	public ModelAndView userprofile(HttpSession session,ModelAndView model) {
 		Object attribute = session.getAttribute("user");
-		model.addObject("user",attribute);
-		model.setViewName("userprofile");
+
+		if(attribute==null) {
+			model.setViewName("redirect:/login");			
+		}else {
+			model.addObject("user",attribute);
+			model.setViewName("userprofile");			
+		}
+		
+		
+		
 		return model;
 	}
 

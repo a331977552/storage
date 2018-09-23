@@ -28,6 +28,7 @@ public class FrontApplication implements WebMvcConfigurer {
 		WebMvcConfigurer.super.addViewControllers(registry);
 		registry.addViewController("/login").setViewName("login");
 		registry.addViewController("/register").setViewName("register");
+	
 	}
 @Override
 public void addInterceptors(InterceptorRegistry registry) {

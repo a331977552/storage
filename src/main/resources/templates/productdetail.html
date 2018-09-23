@@ -67,7 +67,7 @@
 							<div class="form-group row">
 								<div class="col-2">
 									<input class="form-control form-control-sm" type="number"
-										id="inputQuantity" style="text-align: right;" min="1" max="10"
+										id="inputQuantity" style="text-align: right;" min="1" ng-model="itemQuantity" ng-change="quantityChange(itemQuantity,product.quantity)" 
 										value="1">
 								</div>
 								<label for="inputQuantity" class="col-1 col-form-label">Quantity</label>
@@ -109,17 +109,12 @@
 					<h6>Related Products</h6>
 				</div>
 
-				<div class="row">
-
-					<a href="#"><img class="mx-3 img-fluid"
-						src="//placehold.it/120x120"></a> <a href="#"><img
-						class="mx-3 img-fluid" src="//placehold.it/120x120"></a> <a
-						href="#"><img class="mx-3 img-fluid"
-						src="//placehold.it/120x120"></a> <a href="#"><img
-						class="mx-3 img-fluid" src="//placehold.it/120x120"></a> <a
-						href="#"><img class="mx-3 img-fluid"
-						src="//placehold.it/120x120"></a> <a href="#"><img
-						class="mx-3 img-fluid" src="//placehold.it/120x120"></a>
+				<div class="row justify-content-left">
+					<div class="col-2 " ng-repeat="recommendedProduct in recommendedProducts">
+					<a   ng-href="{{$locationhost()+'/productdetail/'+recommendedProduct.id}}" ><img class=" "
+						src="//placehold.it/120x120" width="120px;" height="120px;" ng-src="{{recommendedProduct.imgUrl}}"></a>
+					<span style="display: block;" ng-bind="recommendedProduct.name"></span>
+						 </div>
 				</div>
 			</div>
 
@@ -147,9 +142,17 @@
     var  token= [[${_csrf.token}]];
 	app.controller('myControl', function($scope,$http,$location,$sce) {
 	$scope.product=[[${product}]];
+	$scope.itemQuantity='1';
 	$scope.product.content=$sce.trustAsHtml($scope.product.content);
 	 $scope.imgs=[[${imgs}]];
 	 $scope.category=[[${category}]];
+	$scope.recommendedProducts=[[${recommendedProducts}]];
+	$scope.quantityChange=function(itemQuantity,quantity){
+		if(itemQuantity>quantity){
+			$scope.itemQuantity=quantity;	
+		}
+	
+	}
 	
 	});
 	

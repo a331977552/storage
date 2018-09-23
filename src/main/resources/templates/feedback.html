@@ -1,0 +1,127 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	class="no-js" lang="">
+<head >
+<th:block  th:include="head::head_link"></th:block>
+<meta charset="utf-8">
+<title></title>
+</head>
+
+<body>
+	<!--[if lte IE 9]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+	<div class="container-fluid" ng-app="products"
+		ng-controller="myControl">
+
+	
+		<div th:replace="head::nav"> </div>
+
+		<!-- content starts here -->
+		<section class="">
+		<div>
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a th:href="@{/index}"
+							th:text="#{common.home}">Home</a></li>
+
+						<li class="breadcrumb-item active" aria-current="page"
+							th:text="#{breadcrumb.product.contactus}">contact us</li>
+					</ol>
+				</nav>
+			</div>
+	<div class="container my-2 mt-5">
+    <div class="row" >
+    <div class="col-8">
+    <form th:action="@{/feedback_submit}"  method="POST">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="form-group">
+                <label for="form_name" th:text="#{common.name}">Name</label>
+                <input id="form_name" type="text" name="name" class="form-control" required="required" data-error="Firstname is required.">
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-md-10">
+            <div class="form-group">
+                <label for="form_phone" th:text="#{common.phone}">Phone Number</label>
+                <input id="form_phone" type="tel" name="phone" class="form-control">
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <div class="form-group">
+                <label for="form_email" th:text="#{common.email}">Email </label>
+                <input id="form_email" type="email" name="email" class="form-control" required="required" data-error="Valid email is required.">
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <div class="form-group">
+                <label for="form_message" th:text="#{feedback.howcanwehelp}">How can we help? *</label>
+                <textarea id="form_message" name="comment" class="form-control"  rows="4" required="required" data-error="Please,leave us a message."></textarea>
+                <div class="help-block with-errors"><span></span></div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <br/>
+            <input type="submit" class="btn btn-success btn-send" th:value="#{feedback.sendmsg}" value="Send message">
+        </div>
+    </div>
+    </form>
+    </div><div class="col-4"  th:if="${setting}!=null">
+    <span th:text="#{feedback.reminder1}">您也可以直接通过微信联系管理员</span>
+    <img  th:src="${setting.managerWeChatUrl}">
+    
+    <span th:text="#{feedback.reminder2}"> 或者打支持电话:</span>
+    	<span th:text="${setting.phone}">
+    	</span>
+    
+    </div>
+  </div>
+</div>
+		
+		</section>
+
+
+		<div th:replace="footer::footer"></div>
+	
+	</div>
+
+
+
+
+
+
+	<div th:replace="commonjs::js"></div>
+
+	<script th:inline="javascript">
+	var u=[[@{/}]];
+	var url=u+"product/getProducts".replace("\\","");
+	var app = angular.module('products', []);
+	var csrfName= [[${_csrf.headerName}]];
+    var  token= [[${_csrf.token}]];
+	app.controller('myControl', function($scope,$http,$location) {
+	
+	 
+	  
+	});
+	
+	
+	
+	
+	</script>
+</body>
+
+</html>

@@ -41,7 +41,7 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
 	}
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-
+		
 		http.authorizeRequests().antMatchers("/**").
 		permitAll().and().formLogin().loginPage("/login").loginProcessingUrl("/login").successHandler(new SimpleLoginSuccessHandler())
 		.permitAll().and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/my_logout")

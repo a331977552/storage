@@ -5,6 +5,7 @@
 <head>
 <th:block th:include="head::head_link"></th:block>
 <meta charset="utf-8">
+<link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css"/>
 <title></title>
 </head>
 
@@ -26,15 +27,15 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <h5 class="modal-title" id="exampleModalLabel">reminder</h5>
+        <button type="button" class="close" data-dismiss="modal" ng-show="update_success" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body" ng-bind="reminderInfo">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" th:text="#{common.confirm}"></button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal"  aria-label="Close"  ng-disabled="!update_success" th:text="#{common.confirm}"></button>
       </div>
     </div>
   </div>
@@ -65,48 +66,42 @@
 					class="col-md-8 offset-md-2 col-lg-6 offset-lg-3 col-sm-12 -col-xs-12">
 					<div class="card card-outline-secondary">
 						<div class="card-header">
-							<h3 class="mb-0">User Information</h3>
+							<h3 class="mb-0" th:text="#{common.userInfo}">User Information</h3>
 						</div>
 						<div class="card-body">
 							<form class="form" role="form" autocomplete="off">
 								<input hidden="" type="text" name="id"  ng-value="user.id">
 								<div class="form-group row">
-									<label class="col-lg-3 col-form-label form-control-label">First
-										name</label>
+									<label class="col-lg-3 col-form-label form-control-label" th:text="#{common.name}">
+										Name</label>
 									<div class="col-lg-9">
-										<input class="form-control" name="firstName" type="text"   ng-value="user.firstName"   >
+										<input class="form-control" name="name" type="text" ng-model="user.name"   ng-value="user.name"   >
 									</div>
 								</div>
+								
 								<div class="form-group row">
-									<label class="col-lg-3 col-form-label form-control-label">Last
-										name</label>
+									<label class="col-lg-3 col-form-label form-control-label" th:text="#{common.email}">Email</label>
 									<div class="col-lg-9">
-										<input class="form-control"  name="lastName" type="text"  ng-value="user.lastName" >
-									</div>
-								</div>
-								<div class="form-group row">
-									<label class="col-lg-3 col-form-label form-control-label">Email</label>
-									<div class="col-lg-9">
-										<input class="form-control"  name="email"  type="email"
+										<input class="form-control"  name="email"  type="email" ng-model="user.email"
 											 ng-value="user.email" >
 									</div>
 								</div>
 								<div class="form-group row">
-									<label class="col-lg-3 col-form-label form-control-label">Phone</label>
+									<label class="col-lg-3 col-form-label form-control-label" th:text="#{common.phone}">Phone</label>
 									<div class="col-lg-9">
-										<input class="form-control" type="text" name="phone"  ng-value="user.phone" value="">
+										<input class="form-control" type="text" name="phone"   ng-model="user.phone"  ng-value="user.phone" value="">
 									</div>
 								</div>
 								<div class="form-group row">
 									<label class="col-lg-3 col-form-label form-control-label">Post code</label>
 									<div class="col-lg-9">
-										<input class="form-control" name="postcode" type="text"  ng-value="user.postcode"   value="">
+										<input class="form-control" name="postcode" type="text"  ng-model="user.postcode"  ng-value="user.postcode"   value="">
 									</div>
 								</div>
 										<div class="form-group row">
-									<label class="col-lg-3 col-form-label form-control-label">Address</label>
+									<label class="col-lg-3 col-form-label form-control-label" >Address</label>
 									<div class="col-lg-9">
-										<input class="form-control" type="text" name="address"   ng-value="user.address">
+										<input class="form-control" type="text" name="address" ng-model="user.address"  ng-value="user.address">
 									</div>
 								</div>
 								
@@ -115,8 +110,7 @@
 								<div class="form-group row">
 									<label class="col-lg-3 col-form-label form-control-label"></label>
 									<div class="col-lg-9">
-										<input type="reset" class="btn btn-secondary" value="Cancel">
-										<input type="button" ng-click="my_submit()" class="btn btn-primary"
+										<input type="button" ng-click="my_submit()" class="btn btn-primary" th:value="#{common.saveChanges}"
 											value="Save Changes">
 									</div>
 								</div>
@@ -126,7 +120,35 @@
 				</div>
 			</div>
   </div>
-  <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">order</div>
+  <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+  	<span ng-bind="orderloading_info" style="color: red;" class="h3"></span>
+  	<div class="container">
+  	<table id="example" class="table  table-hover"  style="width:100%">
+        <thead>
+            <tr>
+                <th>order No</th>
+                <th>total Price</th>
+                <th>createdTime</th>
+                <th>Age</th>
+             
+            </tr>
+        </thead>
+        <tbody>
+        
+      
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Age</th>
+          
+            </tr>
+        </tfoot>
+    </table>
+  	</div>
+  </div>
 </div>
 			
 
@@ -143,10 +165,11 @@
 
 
 	<div th:replace="commonjs::js"></div>
-
+	<script type="text/javascript"   src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript"   src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 	<script th:inline="javascript">
 	var u=[[@{/}]];
-	var url=u+"product/getProducts".replace("\\","");
+	var url=u.replace("\\","");
 	var app = angular.module('products', []);
 	var csrfName= [[${_csrf.headerName}]];
     var  token= [[${_csrf.token}]];	
@@ -155,17 +178,89 @@
 		$scope.user=[[${user}]];
 		$scope.my_submit=function (){
 			//update data to server
-			$scope.reminderInfo="success";
+			$scope.reminderInfo="processing";
+			$scope.update_success=false;
 			$("#exampleModal").modal();
+			updateUser($scope,$http);
 			
 		}
-	 
 
 	});
-	
 
 	
-	
+	function updateUser($scope,$http){
+		 $http.defaults.headers.common[csrfName] = token;
+		 var user=$scope.user;	
+		 $http({  
+			    method:'post',  			    
+			    url:url+"user/update",  
+			    data:angular.toJson(user)
+			}).then(function successCallback(req){  			
+				if(req["data"].success==true){
+					$scope.reminderInfo="success";
+					$scope.update_success=true;
+					console.log(req);
+						
+				}else{
+					$scope.reminderInfo=req["data"].msg;
+					$scope.update_success=true;
+					console.log(req);	
+				}
+			
+			},function errorCallback(reponse){
+							
+			})  
+		
+	}
+
+	var ordered=[[#{order.table.order}]];
+	var confirm=[[#{order.table.confirm}]];
+	var dispatched=[[#{order.table.dispatched}]];
+	var finished=[[#{order.table.finished}]];
+	var closed=[[#{order.table.closed}]];
+			var context=[[@{/}]].replace("\\","");
+		   var table= $('#example').DataTable({
+		      'paging'      : true,
+		      'lengthChange': true,
+		      'searching'   : true,
+		      'ordering'    : true,
+		      'info'        : true,
+		      'autoWidth'   : true,
+		      "ajax": context+"orders/user",
+		      "columns": [
+		          { "data": "orderNumber" },
+		          { "data": "price" },
+		          { "data": "createdTime" },
+		          { "data": "status" }
+		      ],
+		      "columnDefs": [ {
+		    	    "targets": 3,
+		    	    "data": "status",
+		    	    "render": function (data,type,row) {
+		    	    	var status=	row["status"];
+		    	    	var st;
+		    	    	switch(status){
+		      	    	case 1: 	    	
+		      	    		st='<label class="badge badge-secondary">'+ordered+'</label>';    	    		
+		      	    		break;
+		      	    	case 2:
+		      	    		st=' <label class="badge badge-info">'+confirm+'</label>';      	    	
+		      	    		break;
+		      	    	case 3: 
+		      	    		st='<label class="badge badge-primary">'+dispatched+'</label>'; 
+		      	    		break;
+		      	    	case 4:
+		      	    		st=' <label class="badge badge-success">'+finished+'</label>';     	    	
+		      	    		break;
+		      	    	case 5:
+		      	    		st=' <label class="badge badge-dark">'+closed+'</label>';   
+		      	    		break;
+		      	    	
+		      	    	}
+		    	      return st;
+		    	    }
+		    	  } ]
+		    });
 	
 	</script>
 </body>
