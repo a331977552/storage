@@ -29,5 +29,6 @@ public interface StOrderRemoteService {
 	OrderWrap  creaOrder(@RequestBody()OrderWrap result);
 	@RequestMapping("/stOrder/findAllOrderByUserid/{id}")
 	ResponseEntity<String> findAllOrderByUserId(@PathVariable(name="id")Integer id);
-
+	@RequestMapping("/stOrder/getInfoFromOrder/{id}")	
+	OrderWrap getInfoFromOrder(@PathVariable(name = "id") Integer orderId);
 }

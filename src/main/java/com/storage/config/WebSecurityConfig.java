@@ -25,9 +25,7 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
 	CustomerDetailService userdetailService;
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web
-		.ignoring()
-		.antMatchers("/static/**","/dist/**","/plugins/**");
+		web.ignoring().antMatchers("/static/**","/dist/**","/plugins/**");
 	}
 
 	@Autowired

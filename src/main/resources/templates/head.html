@@ -64,11 +64,11 @@
 					</a></li>
 					<li class="nav-item" th:if="${session.user==null}"><a
 						th:href="@{/register}" class="nav-link waves-effect waves-light"
-						href="#"> <i class="fa fa-user-plus"></i> <span th:text="#{index.shopping.register}">注册</span>
+						href="#"><span th:text="#{index.shopping.register}">注册</span>
 					</a></li>
 					<li class="nav-item" th:if="${session.user==null}"><a
 						th:href="@{/login}" class="nav-link waves-effect waves-light"
-						href="#"> <i class="fa fa-user"></i> <span th:text="#{index.shopping.login}"> 登录</span>
+						href="#"> <span th:text="#{index.shopping.login}"> 登录</span>
 					</a></li>
 					<li th:if="${session.user!=null}" class="nav-item dropdown"><a
 						class="nav-link dropdown-toggle waves-effect waves-light"

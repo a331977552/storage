@@ -38,7 +38,7 @@
                 <h6 ng-bind="products[$index].product.name" class="my-0">Product name</h6>
                 <small  ng-bind="'Qty: '+item.quantity" class="text-muted">Brief description</small>
               </div>
-              <span class="text-muted"  ng-bind="'¥'+(products[$index].product.sellingprice/100*item.quantity).toFixed(2)">$12</span>
+              <span class="text-muted"  ng-bind="currencySymbol+(products[$index].product.sellingprice_aftertax*item.quantity).toFixed(2)">$12</span>
             </li>
            
           <!--   <li class="list-group-item d-flex justify-content-between bg-light">
@@ -50,7 +50,7 @@
             </li> -->
             <li class="list-group-item d-flex justify-content-between">
               <span>Total (USD)</span>
-              <strong ng-bind="'¥'+totalPrice">$20</strong>
+              <strong ng-bind="currencySymbol+totalPrice">$20</strong>
             </li>
           </ul>
 
@@ -200,6 +200,7 @@
 		var items=[[${items}]];
 		$scope.products=products;
 		$scope.items=items;
+		$scope.currencySymbol=[[${currencySymbol}]];
 		$scope.totalPrice=0;
 		updatePrice($scope);
 		
@@ -208,7 +209,7 @@
 		$scope.totalPrice=0;
 		for(var i in $scope.items){
 			var quan=$scope.items[i].quantity;
-			$scope.totalPrice+= $scope.products[i].product.sellingprice/100*quan;
+			$scope.totalPrice+= $scope.products[i].product.sellingprice_aftertax*quan;
 		}
 		$scope.totalPrice=$scope.totalPrice.toFixed(2);
 	}

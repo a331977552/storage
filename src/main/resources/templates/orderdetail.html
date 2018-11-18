@@ -101,9 +101,9 @@
 													License</td>
 
 												<td class="right"
-													ng-bind="'¥'+(custom.product.sellingprice)">$999,00</td>
-												<td class="center" ng-bind="'¥'+custom.qty">1</td>
-												<td class="right" ng-bind="'¥'+(custom.subtotal)">$999,00</td>
+													ng-bind="custom.product.moneyDisplayed">$999,00</td>
+												<td class="center" ng-bind="custom.qty">1</td>
+												<td class="right" ng-bind="(custom.subtotalDisplayed)">$999,00</td>
 											</tr>
 
 										</tbody>
@@ -117,7 +117,7 @@
 											<tbody>
 												<tr>
 													<td class="left"><strong>Subtotal</strong></td>
-													<td class="right" ng-bind="'¥'+order.totalPrice">$8.497,00</td>
+													<td class="right" ng-bind="order.totalPriceDisplay">$8.497,00</td>
 												</tr>
 												<tr>
 													<td class="left"><strong>Discount (0%)</strong></td>
@@ -130,7 +130,7 @@
 												<tr>
 													<td class="left"><strong>Total</strong></td>
 													<td class="right"><strong
-														ng-bind="'¥'+order.totalPrice">$7.477,36</strong></td>
+														ng-bind="order.totalPriceDisplay">$7.477,36</strong></td>
 												</tr>
 											</tbody>
 										</table>

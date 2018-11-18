@@ -44,7 +44,7 @@
         <div class="col-md-8 col-sm-12 col-xs-12">
             <div class="row justify-content-between">
                 <h6>Items in your cart</h6>
-                <small class="text-muted">5 items</small>
+                <small class="text-muted" ng-bind="{{products.length}} +' items'">5 items</small>
             </div>
             <table class="table table-responsive">
                 <tbody>
@@ -58,7 +58,7 @@
                         <td>
                             <h6 class="mb-0 d-inline" ng-bind="products[$index].product.name">Product Name - Model</h6>
                             <!-- <small class="text-muted">RPI-1510</small> -->
-                            <p class="mb-0 text-muted" ng-bind="'¥'+products[$index].product.sellingprice/100"></p>
+                            <p class="mb-0 text-muted" ng-bind="products[$index].product.moneyDisplayed"></p>
                             <form class="form-inline">
                                 <input class="form-control form-control-sm" id="inputQty" type="number" min="1" ng-change="quantityChange(item,products[$index].product.quantity)"  ng-model="item.quantity"  >
                                 <label for="inputQty" class="form-control-label">&nbsp; Qty</label>
@@ -66,7 +66,7 @@
                             <a class="small text-muted" href="#" ng-click="deleteItems($index)"><i class="fa fa-trash-o"></i> Remove item</a>
                         </td>
                         <td>
-                            <p ng-bind="'¥'+(products[$index].product.sellingprice/100*item.quantity).toFixed(2)">$59.98</p>
+                            <p ng-bind="currencySymbol +(products[$index].product.sellingprice_aftertax*item.quantity).toFixed(2)">$59.98</p>
                         </td>
                     </tr>
                 </tbody>
@@ -81,7 +81,7 @@
             <div class="card mb-3 text-right">
                 <div class="card-header"><i class="fa fa-shopping-cart"></i> Cart Summary</div>
                 <div class="card-body">
-                    <h4 class="card-title mb-0" ng-bind="'¥'+totalPrice">$120.00</h4>
+                    <h4 class="card-title mb-0" ng-bind="currencySymbol+totalPrice">$120.00</h4>
                     <p class="card-text small" th:text="#{cart.totalPrice}">Total</p>
                     <button  class="btn btn-success" ng-click="checkout()" ng-disabled="items.length==0 || items==null" th:text="#{cart.submit.order}">Checkout</button>
                 </div>
@@ -153,6 +153,8 @@
 		
 		var products=[[${products}]];
 		var items=[[${items}]];
+		$scope.setting=[[${setting}]];
+		$scope.currencySymbol=[[${currencySymbol}]];
 		$scope.products=products;
 		$scope.items=items;
 		$scope.totalPrice=0;
@@ -163,7 +165,7 @@
 		$scope.totalPrice=0;
 		for(var i in $scope.items){
 			var quan=$scope.items[i].quantity;
-			$scope.totalPrice+= $scope.products[i].product.sellingprice/100*quan;
+			$scope.totalPrice+= $scope.products[i].product.sellingprice_aftertax*quan;
 		}
 		$scope.totalPrice=$scope.totalPrice.toFixed(2);
 	}

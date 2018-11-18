@@ -7,10 +7,12 @@
 <th:block th:include="head::head_link"></th:block>
 <meta charset="utf8">
 <link rel="stylesheet" th:href="@{/css/index.css}">
-<link rel="stylesheet" th:href="@{/css/productCard.css}">
+<link rel="stylesheet" th:href="@{/css/newProductCard.css}">
 
+<link rel="stylesheet" th:href="@{/css/animate.css}">
 
-
+<link rel="stylesheet" th:href="@{/css/button.css}">
+<link th:replace="commonjs::js"></link>
 <title>TT_Mart</title>
 </head>
 
@@ -18,7 +20,7 @@
 	<!--[if lte IE 9]>
     <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
   <![endif]-->
-	<div class="container-fluid" ng-app="products"
+	<div class="container-fluid" ng-app="products" 
 		ng-controller="myControl">
 
 		<!-- nav -->
@@ -88,31 +90,29 @@
 		</div>
 		<!-- search end -->
 		<!-- product display -->
-			<div class="row" id="products">
-					<div ng-show="products==null"
-						class="col-md-12 justify-content-center p-3" align="center">
-						<div class="loader"></div>
-					</div>
-				</div>
+		<div class="row" id="products">
+			<div ng-show="products==null"
+				class="col-md-12 justify-content-center p-3" align="center">
+				<div class="loader"></div>
+			</div>
+		</div>
 		<div class="container-fluid pt-1">
 			<ol class="breadcrumb bg-transparent">
 				<li class="breadcrumb-item"><a href="#">Home</a></li>
 			</ol>
 			<div class="row" ng-show="products!=null">
-		
-				<div class="col-lg-3 col-sm-12 col-xs-12" id="sidebar">
+
+				<div class="col-lg-2 col-xl-2 col-md-2  col-sm-12 col-xs-12" id="sidebar">
 					<div class="card mb-3" style="border-top: 2px solid;">
 						<div class="card-header" th:text="#{product.category.name}">Categories</div>
 						<div class="card-body px-0">
 							<nav class="nav flex-column">
-								
-								
-								
-								<a th:each="category,stat:${categories}"
-									class="nav-link py-1"
-								  href="#list-home"
-								 th:text="${category.name}">Home</a>
-								
+
+
+
+								<a th:each="category,stat:${categories}" class="nav-link py-1"
+									href="#list-home" th:text="${category.name}">Home</a>
+
 							</nav>
 						</div>
 					</div>
@@ -126,78 +126,110 @@
 							</ul>
 						</div>
 					</div>
-					
+
 				</div>
-				<div class="col-lg-9 col-xs-12 col-sm-12">
+				<div class="col-lg-10 col-xs-12 col-sm-12">
 					<div class="row">
-					<div class="col-lg-12">
-					<small>showing <strong ng-bind="products.length">12</strong> products
-					</small>
-					<div class="pull-right">
-						<a class="btn btn-light" href="#"><i class="fa fa-th-large"></i></a>
-						<a class="btn btn-light" href="#"><i class="fa fa-list"></i></a> <a
-							class="btn btn-light btn-sm text-muted dropdown-toggle" href="#"
-							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Default
-							Sorting</a>
-						<div class="dropdown-menu">
-							<a class="dropdown-item" href="#">Popularity</a> <a
-								class="dropdown-item" href="#">Ratings</a> <a
-								class="dropdown-item" href="#">Latest</a> <a
-								class="dropdown-item" href="#">Oldest</a>
+						<div class="col-lg-12">
+							<small>showing <strong ng-bind="products.length">12</strong>
+								products
+							</small>
+							<div class="pull-right">
+								<a class="btn btn-light" href="#"><i class="fa fa-th-large"></i></a>
+								<a class="btn btn-light" href="#"><i class="fa fa-list"></i></a>
+								<a class="btn btn-light btn-sm text-muted dropdown-toggle"
+									href="#" data-toggle="dropdown" aria-haspopup="true"
+									aria-expanded="false">Default Sorting</a>
+								<div class="dropdown-menu">
+									<a class="dropdown-item" href="#">Popularity</a> <a
+										class="dropdown-item" href="#">Ratings</a> <a
+										class="dropdown-item" href="#">Latest</a> <a
+										class="dropdown-item" href="#">Oldest</a>
+								</div>
+							</div>
 						</div>
 					</div>
-					</div>
-					</div>
 					<hr>
-					<div class="row" >
+					<div class='row no-gutters' >
+					
+						<div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mb-1"
+							ng-repeat="product in products" style="padding-left: 5px; padding-right: 5px;" ng-cloak>
+							<div class="product-frame">
+								<span class="product-card-cart" style="margin-left: 1px;" ng-bind="product.offer">热销</span>
+							<a href="" ng-click="productDetail(product.id)">
+							<img  ng-src="{{product.imgUrl}}" ng-attr-data-id="{{product.id}}"
+										class="product-img-wrap">
+										</a>
+								<hr style="margin: 0px; padding: 0px;">							
+								<div >
+								<a href="" ng-click="productDetail(product.id)" ><span class='line-clamp'   ng-bind="product.name">油麦菜</span></a>			
+								<span  class='line-clamp-info'  ng-bind="product.quantityDesc==null?'&nbsp;':product.quantityDesc">每公斤</span>
+											
+								<a href="" ng-click="productDetail(product.id)"><span class='offer-info' ng-bind="product.promotionTitle==null?'&nbsp;':product.promotionTitle">买二增一</span></a>
+											
+								<div class='price-frame'>
+								<span ng-bind="product.moneyDisplayed" class="price-offer price">5.55$</span> 
+    							<span class="old-price" ng-bind="product.oldMoneyDisplayed">6.88$</span>
+								<span style="color: red; font-size: small; "  ng-show="product.quantity==0"  th:text="#{index.outofstock}"> </span>
+								
+								</div>			
 			
-					<div class="col-md-3 col-sm-6 col-xs-6  mb-3"
-						ng-repeat="product in products">
-
-						<figure class="card card-product">
-							<div class="img-wrap">
-								<a href="" ng-click="productDetail(product.id)"><img
-									ng-src="{{product.imgUrl}}" ng-attr-data-id="{{product.id}}"
-									width="100%"></a>
 							</div>
-							<figcaption class="info-wrap">
-								<h4 class="title" ng-bind="product.name"></h4>
-								<p class="desc" ng-bind="product.title"></p>
-								<div class="rating-wrap">
-									<div ng class="label-rating" ng-show="product.quantity!=0"
-										ng-bind="'库存:'+product.quantity"></div>
-									<div ng class="label-rating" ng-show="product.quantity==0"
-										style="color: red" th:text="#{index.outofstock}">没有库存了</div>
-									<div class="label-rating">154 orders</div>
-								</div>
-								<!-- rating-wrap.// -->
-							</figcaption>
-							<div class="bottom-wrap">
-								<a href="" class="btn btn-sm btn-primary float-right"
-									ng-click="addCart($index,product.id)" th:text="#{index.addingto.cart}">添加购物车</a>
-								<div class="price-wrap h5">
-									<span class="price-new" ng-bind="'¥'+product.sellingprice/100">$1280</span>
-									<!-- <del class="price-old">$1980</del> -->
-								</div>
-								<!-- price-wrap.// -->
+						
+									<div align="center">
+									<button ng-click="addCart($index,product.id)" 
+									 class="button button-small  button-primary trollery-button" >添加到购物车<i style="font-size: 16px;" class="fa fa-cart-plus"></i></button>
+									</div>
+								
+								
 							</div>
-							<!-- bottom-wrap.// -->
-						</figure>
-
-
-
-
-					</div>
-						
-					
-						
+						</div>
 					
 					</div>
+					
+						<!-- 	<figure class="card card-product">
+								<div class="img-wrap">
+									<a href="" ng-click="productDetail(product.id)"><img
+										ng-src="{{product.imgUrl}}" ng-attr-data-id="{{product.id}}"
+										width="100%"></a>
+								</div>
+								<figcaption class="info-wrap">
+									<h4 class="title" style="font-size: medium;"
+										ng-bind="product.name"></h4>
+									<p ng-bind="product.title"
+										style="margin: 0px; padding: 0px; font-size: small;"></p>
+									<div>
+										<div ng class="label-rating" ng-show="product.quantity!=0"
+											style="font-size: small;" ng-bind="'库存:'+product.quantity"></div>
+										<div ng class="label-rating" ng-show="product.quantity==0"
+											style="color: red; font-size: x-small;"
+											th:text="#{index.outofstock}">没有库存了</div>
+										<div class="label-rating" style="font-size: small;">154
+											orders</div>
+									</div>
+									rating-wrap.//
+								</figcaption>
+								<div class="bottom-wrap">
+									<a href="" class="btn btn-sm btn-primary float-right"
+										ng-click="addCart($index,product.id)"
+										th:text="#{index.addingto.cart}">添加购物车</a>
+									<div class="price-wrap h5">
+										<span class="price-new" ng-bind="product.moneyDisplayed">$1280</span>
+										<del class="price-old">$1980</del>
+									</div>
+									price-wrap.//
+								</div>
+								bottom-wrap.//
+							</figure>
+ -->
+
+
+
 					<hr>
-					<div class="row my-5">
+					<div class="row my-5" >
 
 						<!--Pagination -->
-						<ul class=" ml-auto mr-auto pagination justify-content-center">
+						<ul class=" ml-auto mr-auto pagination justify-content-center" ng-cloak>
 
 							<!--First-->
 							<li
@@ -215,7 +247,7 @@
 
 
 
-							<li ng-repeat="ps in pageArray"
+							<li ng-repeat="ps in pageArray" 
 								ng-class="ps==(pages.currentPage+1)?'page-item active':'page-item'"><a
 								class="page-link" href="#"
 								ng-click="ps==(pages.currentPage+1)?'':getContent(ps-1)">{{ps}}</a></li>
@@ -236,11 +268,14 @@
 							</li>
 
 						</ul>
-						<small class="ml-auto" ng-bind="'showing '+pages.currentPage*pages.pageSize+'-'+(pages.currentPage*pages.pageSize+24)+' of  '+pages.totalCount+' results'"></small>
-
+						
 
 					</div>
-
+					<div class='row'>
+					<small class="ml-auto"
+							ng-bind="'showing '+pages.currentPage*pages.pageSize+'-'+(pages.currentPage*pages.pageSize+24)+' of  '+pages.totalCount+' results'"></small>
+					
+					</div>
 					<!-- pagination end -->
 
 				</div>
@@ -258,11 +293,16 @@
 
 
 	<script type="text/javascript" th:src="@{/js/popper.min.js}"></script>
-	<div th:replace="commonjs::js"></div>
+	
 	<script type="text/javascript"
 		th:src="@{/js/bootstrap3-typeahead.min.js}"></script>
 	<script type="text/javascript" th:src="@{/js/bloodhound.min.js}"></script>
+	<script type="text/javascript" th:src="@{/js/bootstrap-notify.min.js}"></script>
+	
+	<script type="text/javascript" th:src="@{/js/MyNotify.js}"></script>
+	
 	<script th:inline="javascript">
+
 	
 	var u=[[@{/}]];
 	var url=u+"product/getProducts".replace("\\","");
@@ -278,7 +318,7 @@
 	    $scope.addCart=function($index, id){
 	    	if($scope.products[$index].quantity==0)
 	    		{
-	    		alert($scope.products[$index].name+" 没有库存了");
+	    		showNotifactionInCenter($scope.products[$index].name+"没有库存了",true,"warning");	    	
 	    		return ;
 	    		}
 	    	 var context = [[@{/}]]+"cart/add";
@@ -290,7 +330,7 @@
 				    data:[{productid:id,quantity:1}] 					
 				}).then(function successCallback(req){  			
 					if(req["data"]["code"]==200){
-						alert([[#{index.shopping.cart.success}]]);
+						showNotifaction([[#{index.shopping.cart.success}]])
 					}	
 					
 				})  
@@ -366,6 +406,7 @@
 		
 		
 	})
+	
 	
 	
 	

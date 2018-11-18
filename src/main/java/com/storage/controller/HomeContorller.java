@@ -106,6 +106,7 @@ public class HomeContorller {
 		} else {
 			view.addObject("categories", new ArrayList<Category>());
 		}
+		
 		view.setViewName("index");
 		return view;
 	}
@@ -266,12 +267,7 @@ public class HomeContorller {
 			StorageResult<Customer> customer = customerService.getCustomer(user.getId());
 			model.addObject("user", customer.getResult());
 		}
-		StorageResult<Setting> setting = settingRemoteService.getSetting();
-		if(!setting.isSuccess())
-		{
-			model.setViewName("redirect:/error?error=server unavailiable");
-			return model;
-		}
+	
 		String cookieValue = CookieUtils.getCookieValue(request, cartName, true);
 
 		if (!StringUtils.isEmpty(cookieValue)) {
@@ -288,7 +284,6 @@ public class HomeContorller {
 					} else {
 						if (customCart.getQuantity() > quantity)
 							customCart.setQuantity(quantity);
-						detail.getProduct().setSellingprice((int)(detail.getProduct().getSellingprice()*setting.getResult().getCurrencyRate()));
 						products.add(detail);
 					}
 				} else {
@@ -302,6 +297,8 @@ public class HomeContorller {
 				String objectToJson = JsonUtils.objectToJson(jsonToList);
 				CookieUtils.setCookie(request, response, cartName, objectToJson, true);
 			}
+			Integer currencyDisplay = settingRemoteService.getSetting().getResult().getCurrencyDisplay();
+			model.addObject("currencySymbol",currencyDisplay==1?"£":"¥");
 			model.addObject("items", jsonToList);
 			model.addObject("products", products);
 			model.setViewName("checkout");
@@ -318,13 +315,7 @@ public class HomeContorller {
 		String cookieValue = CookieUtils.getCookieValue(request, cartName, true);
 
 		if (!StringUtils.isEmpty(cookieValue)) {
-			StorageResult<Setting> setting = settingRemoteService.getSetting();
-			if(!setting.isSuccess())
-			{
-				model.setViewName("redirect:/error?error=server unavailiable");
-				return model;
-			}
-			Float currencyRate = setting.getResult().getCurrencyRate();
+		
 			
 			List<CustomCart> jsonToList = JsonUtils.jsonToList(cookieValue, CustomCart.class);
 			List<ProductDetail> products = new ArrayList<>(jsonToList.size());
@@ -339,7 +330,6 @@ public class HomeContorller {
 					} else {
 						if (customCart.getQuantity() > quantity)
 							customCart.setQuantity(quantity);
-						detail.getProduct().setSellingprice((int)(detail.getProduct().getSellingprice()*currencyRate));
 						products.add(detail);
 					}
 				} else {
@@ -354,6 +344,8 @@ public class HomeContorller {
 				CookieUtils.setCookie(request, response, cartName, objectToJson, true);
 			}
 			StorageResult<Setting> setting2 = settingRemoteService.getSetting();
+			
+			model.addObject("currencySymbol",setting2.getResult().getCurrencyDisplay()==1?"£":"¥");
 			model.addObject("setting",setting2.getResult());
 			model.addObject("items", jsonToList);
 			model.addObject("products", products);
@@ -380,8 +372,20 @@ public class HomeContorller {
 		return model;
 	}
 
+	@RequestMapping(value = { "/orderdetail" })
+	public ModelAndView orderdetail(Integer orderId,ModelAndView model) {
+		if(orderId==null) {
+			model.addObject("error","no order id fount");
+			model.setViewName("redirect:/error");			
+		}else {
+			OrderWrap stOrder = orderService.getInfoFromOrder(orderId);
+			model.addObject("order",stOrder);
+			model.setViewName("orderdetail");
+		}
+		return model;
+		
+	}
 	@RequestMapping(value = { "/order" })
-
 	public ModelAndView order(HttpServletRequest request, HttpServletResponse response, Customer customer,
 			String comment, String paymentMethod, ModelAndView model) {
 		String cookieValue = CookieUtils.getCookieValue(request, cartName, true);
@@ -392,13 +396,7 @@ public class HomeContorller {
 		} else {
 			customer.setId(-1);
 		}
-		StorageResult<Setting> setting = settingRemoteService.getSetting();
-		if(!setting.isSuccess())
-		{
-			model.setViewName("redirect:/error?error=server unavailiable");
-			return model;
-		}
-		Float currencyRate = setting.getResult().getCurrencyRate();
+	
 		
 		if (!StringUtils.isEmpty(cookieValue)) {
 			List<CustomCart> jsonToList = JsonUtils.jsonToList(cookieValue, CustomCart.class);
@@ -428,7 +426,6 @@ public class HomeContorller {
 			result.setDate(new Date());
 			List<CustomProduct> list = new ArrayList<>();
 			int index = 0;
-			BigDecimal base = new BigDecimal(100);
 			BigDecimal totalPrice = new BigDecimal(0);
 			for (ProductDetail pd : products) {
 				CustomProduct e = new CustomProduct();
@@ -436,14 +433,11 @@ public class HomeContorller {
 				CustomCart customCart = jsonToList.get(index);
 				e.setQty(customCart.getQuantity());
 				BigDecimal quan = new BigDecimal(customCart.getQuantity());
-				Integer sellingprice = pd.getProduct().getSellingprice();
-				sellingprice=(int) (currencyRate*sellingprice);
-				BigDecimal sell = new BigDecimal(sellingprice);
-				BigDecimal divide = sell.divide(base);
-				pd.getProduct().setSellingprice(divide.intValue());
-				BigDecimal multiply = divide.multiply(quan);
-				totalPrice = totalPrice.add(multiply);
-				e.setSubtotal(multiply.doubleValue());
+				BigDecimal sellingprice = pd.getProduct().getSellingprice_aftertax();	
+				pd.getProduct().setSellingprice(sellingprice);
+				BigDecimal multiply = quan.multiply(sellingprice);				
+				totalPrice = totalPrice.add(multiply);				
+				e.setSubtotal(multiply);
 				list.add(e);
 				index++;
 			}
@@ -453,18 +447,18 @@ public class HomeContorller {
 			order.setPayment(paymentMethod);
 			result.setOrder(order);
 
-			result.setTotalPrice(totalPrice.doubleValue());
+			result.setTotalPrice(totalPrice);
 
 			OrderWrap creaOrder = remoteService.creaOrder(result);
 
 			
 			
 			CookieUtils.deleteCookie(request, response, cartName);
-			model.addObject("order", creaOrder);
-			
+//			model.addObject("order", creaOrder);
+//			
 	
-			
-			model.setViewName("order");
+			model.addObject("orderId",creaOrder.getOrder().getId());
+			model.setViewName("redirect:/orderdetail");
 		} else {
 			model.setViewName("redirect:/error?error=please dont re-submit");
 		}
