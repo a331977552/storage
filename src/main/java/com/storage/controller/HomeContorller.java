@@ -97,12 +97,11 @@ public class HomeContorller {
 		ResponseEntity<String> findAll = categoryService.findAll();
 		if (findAll.getStatusCodeValue() == 200 && findAll.hasBody()) {
 			String body = findAll.getBody();
-			StorageResult<List<Category>> jsonToObject = JsonUtils.jsonToObject(body,
-					new TypeReference<StorageResult<List<Category>>>() {
+			List<Category> jsonToObject = JsonUtils.jsonToObject(body,
+					new TypeReference<List<Category>>() {
 					});
-			if (jsonToObject.isSuccess()) {
-				view.addObject("categories", jsonToObject.getResult());
-			}
+			
+				view.addObject("categories", jsonToObject);
 		} else {
 			view.addObject("categories", new ArrayList<Category>());
 		}
@@ -242,14 +241,10 @@ public class HomeContorller {
 			
 			model.addObject("product",product );
 			model.addObject("imgs", jsonToPojo.getImgs());
-			List<Category> categories = jsonToPojo.getCategories();
-			for (Category category : categories) {	
-				Integer id = category.getId();
-				if(id==category2) {
-					model.addObject("category",category);
-					break;
-				}
-			}
+			Category category = jsonToPojo.getCategory();
+		
+			model.addObject("category",category);
+			
 			ResponseEntity<String> bestSellingProduct = this.productService.getBestSellingProduct(category2);
 			model.addObject("recommendedProducts",JsonUtils.jsonToList(bestSellingProduct.getBody(),Product.class));
 			model.setViewName("productdetail");

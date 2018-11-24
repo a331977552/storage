@@ -2,10 +2,8 @@ package com.storage.controller.advicer;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
-
-import com.storage.entity.custom.StorageResult;
+import org.springframework.web.servlet.ModelAndView;
 
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler {
@@ -13,8 +11,8 @@ public class RestResponseEntityExceptionHandler {
 
     @ExceptionHandler(value 
       = { Exception.class})
-    @ResponseBody
-    protected StorageResult handleConflict(
+    
+    protected ModelAndView handleConflict(
       Exception ex, WebRequest request) {
     	String message = ex.getMessage();
     	String bodyOfResponse;
@@ -24,9 +22,14 @@ public class RestResponseEntityExceptionHandler {
     	if(message.contains("Load balancer does not")) {
     		bodyOfResponse="back service has gone";
     	}else {
-    		bodyOfResponse=message;
+    		bodyOfResponse=message+"code:"+ 109;
     	}
-    	StorageResult<Object> failed = StorageResult.failed(bodyOfResponse);
-        return failed;
+    	if(ex instanceof feign.RetryableException) {
+    		bodyOfResponse="服务器异常! code:"+ 110;
+    	}
+    	ModelAndView andView=new ModelAndView();
+    	andView.addObject("error",bodyOfResponse);
+    	andView.setViewName("redirect:/error");
+        return andView;
 }
     }

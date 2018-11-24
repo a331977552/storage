@@ -17,29 +17,7 @@ keyframes spin { 0% {
 }
 
 100%
-{
-transform
-
-
-
-
-:
-
-
- 
-
-
-rotate
-
-
-
-
-(360
-deg
-
-
-);
-}
+{transform: rotate(360deg);}
 }
 .my-gallery-hover {
 	-moz-box-shadow: 1px 1px 1px #EEEEEE;
@@ -52,4 +30,29 @@ deg
 	-moz-box-shadow: 1px 1px 3px #333333;
 	-webkit-box-shadow: 1px 1px 3px #333333;
 	box-shadow: 1px 1px 3px #333333;
+}
+
+.category-list{
+	list-style-type: none;
+    margin: 0;
+    padding: 0;
+	
+}
+.category-list a{
+
+	
+}
+.category-list a:link, a:visited{
+	 color: black;
+}
+.category-list a.selected{
+
+	background-color: #c0c0c0;	
+}
+.category-list-group{
+
+    margin: 0;
+    padding: 0;
+    margin-left: 1rem;
+	
 }
