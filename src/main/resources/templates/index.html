@@ -11,7 +11,6 @@
 
 <link rel="stylesheet" th:href="@{/css/animate.css}">
 
-<link rel="stylesheet" th:href="@{/css/button.css}">
 <link th:replace="commonjs::js"></link>
 <title>TT_Mart</title>
 </head>
@@ -100,8 +99,8 @@
 			
 		
 			<div class="row" ng-show="products!=null">
-
-				<div class="col-lg-2 col-xl-2 col-md-2  col-sm-12 col-xs-12"
+					
+				<div class="col-lg-2 col-xl-2 col-md-12  col-sm-12 col-xs-12"
 					id="sidebar">
 
 					<div class="row">
@@ -202,17 +201,19 @@
 						</div>
 					</div>
 					<hr>
-					<div class='row no-gutters' >
+					<div class='row no-gutters'  infinite-scroll="addMoreItems()"  infinite-scroll-distance='1'  infinite-scroll-disabled='busyScrolling' >
 					
 						<div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mb-1"
 							ng-repeat="product in products" style="padding-left: 5px; padding-right: 5px;" ng-cloak>
 							<div class="product-frame">
 								<span class="product-card-cart" style="margin-left: 1px;" ng-bind="product.offer">热销</span>
 							<a href="" ng-click="productDetail(product.id)">
-							<img  ng-src="{{product.imgUrl}}" ng-attr-data-id="{{product.id}}"
-										class="product-img-wrap">
-										</a>
-								<hr style="margin: 0px; padding: 0px;">							
+							<img  hires="{{product.imgUrl}}" ng-src="/img/img_placeholder.png" ng-attr-data-id="{{product.id}}"class="product-img-wrap">
+									
+									
+									</a>
+								<hr style="margin: 0px; padding: 0px;">
+													
 								<div >
 								<a href="" ng-click="productDetail(product.id)" ><span class='line-clamp'   ng-bind="product.name">油麦菜</span></a>			
 								<span  class='line-clamp-info'  ng-bind="(product.quantityDesc==null||product.quantityDesc=='')?'&nbsp;':product.quantityDesc">每公斤</span>
@@ -229,12 +230,15 @@
 							</div>
 						
 									<div align="center">
+										
 									<button ng-click="addCart($index,product.id)" 
-									 class="button button-small  button-primary trollery-button" >添加到购物车<i style="font-size: 16px;" class="fa fa-cart-plus"></i></button>
+									 class="btn btn-info" style="width: 100%;" >添加到购物车<i style="font-size: 16px;" class="fa fa-cart-plus"></i></button>
 									</div>
 								
 								
 							</div>
+							
+							
 						</div>
 					
 					</div>
@@ -244,57 +248,12 @@
 
 
 					<hr>
-					<div class="row my-5" >
-
-						<!--Pagination -->
-						<ul class=" ml-auto mr-auto pagination justify-content-center" ng-cloak>
-
-							<!--First-->
-							<li
-								ng-class="pages.currentPage==0?'page-item disabled':'page-item'"><a
-								ng-click="getContent(0)" class="page-link">First</a></li>
-
-							<!--Arrow left-->
-							<li
-								ng-class="pages.currentPage==0?'page-item disabled':'page-item'">
-								<a class="page-link" aria-label="Previous"
-								ng-click="getContent(pages.currentPage-1)"> <span
-									aria-hidden="true">&laquo;</span> <span class="sr-only">Previous</span>
-							</a>
-							</li>
-
-
-
-							<li ng-repeat="ps in pageArray" 
-								ng-class="ps==(pages.currentPage+1)?'page-item active':'page-item'"><a
-								class="page-link" href="#"
-								ng-click="ps==(pages.currentPage+1)?'':getContent(ps-1)">{{ps}}</a></li>
-
-							<!--Arrow right-->
-							<li
-								ng-class="pages.currentPage==(pages.totalPage-1)?'page-item disabled':'page-item'">
-								<a ng-click="getContent(pages.currentPage+1)" class="page-link"
-								aria-label="Next"> <span aria-hidden="true">&raquo;</span> <span
-									class="sr-only">Next</span>
-							</a>
-							</li>
-
-							<!--Last-->
-							<li
-								ng-class="pages.currentPage==(pages.totalPage-1)?'page-item disabled':'page-item'">
-								<a ng-click="getContent(pages.totalPage-1)" class="page-link">Last</a>
-							</li>
-
-						</ul>
-						
-
-					</div>
+					
 					<div class='row'>
 					<small class="ml-auto"
 							ng-bind="'showing '+pages.currentPage*pages.pageSize+'-'+(pages.currentPage*pages.pageSize+24)+' of  '+pages.totalCount+' results'"></small>
 					
 					</div>
-					<!-- pagination end -->
 
 				</div>
 			</div>
@@ -324,6 +283,9 @@
 
 	<script type="text/javascript" th:src="@{/js/jsLocationUtil.js}"></script>
 	
+	<script type="text/javascript" th:src="@{/js/ng-infinite-scroll.min.js}"></script>
+	
+	
 	<script th:inline="javascript">
 		
 	
@@ -331,9 +293,26 @@
 	var csrfName= [[${_csrf.headerName}]];
     var  token= [[${_csrf.token}]];
 	var url=u+"product/getProducts".replace("\\","");
-	var app = angular.module('products',['ngRoute']).config(['$locationProvider', function($locationProvider) {
-		  $locationProvider.html5Mode({enabled:true,requireBase: false});
-	}]).controller('myControl', function($scope,$http,$location) {
+	var app = angular.module('products',['ngRoute','infinite-scroll']).config(['$locationProvider', function($locationProvider) {
+	
+		$locationProvider.html5Mode({enabled:true,requireBase: false});
+	}]).value('THROTTLE_MILLISECONDS', 0);
+
+	
+	app.directive('hires', function() {
+	  return {
+	    restrict: 'A',
+	    scope: { hires: '@' },
+	    link: function(scope, element, attrs) {
+	        element.one('load', function() {
+	            element.attr('src', scope.hires);
+	        });
+	    }
+	  };
+	});
+	app.controller('myControl', function($scope,$http,$location,$timeout) {
+		$scope.mCurrentPage=0;
+	    $scope.busyScrolling=true;
 		if($location.search()["offerConfirmed"]){
 			$scope.offerConfirmed=$location.search()["offerConfirmed"]==1?true:false;
 		}
@@ -347,15 +326,32 @@
 			$event.preventDefault();		
 			goToDesiredUrl("categoryId",id);
 		
-		}
+		};
 		$scope.sort=function(type){
 
 			goToDesiredUrl("sort",type);
-		}
+		};
 		$scope.offer=function (){
 			
 			goToDesiredUrl("offerConfirmed",$scope.offerConfirmed?1:0);
+		};
+		
+		$scope.addMoreItems=function (){
+				console.log("addMoreItems");
+			 $scope.busyScrolling=true;
+			var inputValue=$scope.search_value;
+			
+			$http({  
+			    method:'post',  
+			    url:url+"?currentPage="+$scope.mCurrentPage+"&pageSize=24",  				
+			    data:{} 				
+			}).then(function successCallback(req){
+				 $scope.products=$scope.products.concat(req["data"]["result"]["beans"]);							
+				 $scope.busyScrolling=false;
+			})  
+			
 		}
+		
 	    $scope.productDetail=function (id){			
 	    						window.location.href=(u+"productdetail/"+id);
 	    					}
@@ -383,21 +379,19 @@
 	    }
 	    $scope.search=function (){
 	    	var inputValue=$scope.search_value;
-	    	load($scope,$http,0,{name:inputValue}); 	
+	    	load($scope,$http,0,{name:inputValue},$timeout); 	
 	    }
-		load($scope,$http,0,{});
-	    $scope.getContent=function(requestPage){	    	
-	    	load($scope,$http,requestPage,{});
-	    }
+		load($scope,$http,0,{},$timeout);
+	  
 	});
 	
 	function processUrl(){
 		
 	}
-	function load($scope,$http,currentPage,dataValue){
+	function load($scope,$http,currentPage,dataValue,$timeout){
+		 $scope.busyScrolling=true;
 		 $http.defaults.headers.common[csrfName] = token;
 			$http({  
-
 			    method:'post',  
 
 			    url:url+"?currentPage="+currentPage+"&pageSize=24",  
@@ -405,10 +399,11 @@
 			    data:dataValue 
 				
 
-			}).then(function successCallback(req){  			
+			}).then(function successCallback(req){
 				$scope.products=req["data"]["result"]["beans"];
 				$scope.pages=req["data"]["result"];
 			
+				$scope.mCurrentPage++;
 				var start=$scope.pages["beginNumber"]+1;
 				var end=$scope.pages["endNumber"]+1;
 			
@@ -416,7 +411,10 @@
 				for(var i=start;i<end;i++){
 		    		input.push(i);
 		    	}
-				$scope.pageArray=input;			
+				$scope.pageArray=input;
+				$timeout(function (){
+					 $scope.busyScrolling=false; 
+				},1000);
 			})  
 		
 	}

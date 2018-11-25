@@ -35,11 +35,11 @@
       border-color: #ff0000 transparent transparent transparent
 }
  
-.product-frame:hover {  box-shadow:0 1px 11px 0 rgba(0,0,0,.3);
+.product-frame:hover {  box-shadow:0 1px 11px 0 rgba(0,0,0,.5);
 }
 .product-img-wrap{
 	width:100%;
-	border-radius:10px;
+	
 }
 .product-img-wrap:hover{
 	width:100%;
