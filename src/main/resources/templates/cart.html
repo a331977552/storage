@@ -81,7 +81,7 @@
             <div class="card mb-3 text-right">
                 <div class="card-header"><i class="fa fa-shopping-cart"></i> Cart Summary</div>
                 <div class="card-body">
-                    <h4 class="card-title mb-0" ng-bind="currencySymbol+totalPrice">$120.00</h4>
+                    <h4 class="card-title mb-0" ng-bind="currencySymbol+totalPrice">{{currencySymbol}}0.0</h4>
                     <p class="card-text small" th:text="#{cart.totalPrice}">Total</p>
                     <button  class="btn btn-success" ng-click="checkout()" ng-disabled="items.length==0 || items==null" th:text="#{cart.submit.order}">Checkout</button>
                 </div>

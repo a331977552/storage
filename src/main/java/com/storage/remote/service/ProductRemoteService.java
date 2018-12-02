@@ -30,7 +30,12 @@ public interface ProductRemoteService {
 	ResponseEntity<String>   getProductByBarcode(@RequestParam(required=false,name="barcode",value="barcode") String barcode,@RequestParam(required=false,name="id",value="id") Integer id);
 	@RequestMapping(value="/product/list", consumes= {MediaType.APPLICATION_JSON_UTF8_VALUE}, produces= {MediaType.APPLICATION_JSON_UTF8_VALUE})
 
-	ResponseEntity<String>   getProduct(@RequestBody(required=false) Product product, @RequestParam(value="currentPage",required=false)Integer currentPage, @RequestParam(value="pageSize",required=false) Integer pageSize);
+	ResponseEntity<String>   getProduct(
+			@RequestBody(required=false) Product product, @RequestParam(value="currentPage",required=false)Integer currentPage, 
+			@RequestParam(value="pageSize",required=false) Integer pageSize,
+			@RequestParam(value="sort",required=false)String sort,@RequestParam(value="categoryId",required=false)Integer categoryId
+			,@RequestParam(value="offerConfirmed",required=false)Integer offerConfirmed
+			);
 	@DeleteMapping("/product/delete/{id}")
 	StorageResult<Product>   deleteProductById(@PathVariable("id")Integer id);
 	@GetMapping("/product/stockreminder")

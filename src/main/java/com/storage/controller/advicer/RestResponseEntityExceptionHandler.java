@@ -2,34 +2,42 @@ package com.storage.controller.advicer;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.ModelAndView;
 
-@ControllerAdvice
+import com.storage.controller.CartController;
+import com.storage.controller.OrderController;
+import com.storage.controller.ProductController;
+import com.storage.controller.UserController;
+import com.storage.entity.custom.StorageResult;
+
+@ControllerAdvice(assignableTypes = { 
+		CartController.class, 
+		OrderController.class, 
+		ProductController.class,
+		UserController.class })
 public class RestResponseEntityExceptionHandler {
 
 
     @ExceptionHandler(value 
       = { Exception.class})
-    
-    protected ModelAndView handleConflict(
+    @ResponseBody
+    protected Object handleConflict(
       Exception ex, WebRequest request) {
     	String message = ex.getMessage();
     	String bodyOfResponse;
     	if(message.startsWith("The temporary upload location")) {
-    		bodyOfResponse = "服务器异常! code: 99";
+    		bodyOfResponse = "服务器繁忙! code: 199";
     	}else
     	if(message.contains("Load balancer does not")) {
-    		bodyOfResponse="服务器异常! code: 100";
+    		bodyOfResponse="服务器繁忙! code: 1100";
     	}else {
-    		bodyOfResponse=message+"code: 109";
+    		bodyOfResponse=message+"code: 1109";
     	}
     	if(ex instanceof feign.RetryableException) {
-    		bodyOfResponse="服务器异常! code: 110";
+    		bodyOfResponse="服务器繁忙! code: 1110";
     	}
-    	ModelAndView andView=new ModelAndView();
-    	andView.addObject("error",bodyOfResponse);
-    	andView.setViewName("redirect:/error");
-        return andView;
+    	
+        return StorageResult.failed(bodyOfResponse);
 }
     }

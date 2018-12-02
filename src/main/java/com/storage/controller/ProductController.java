@@ -29,10 +29,13 @@ public class ProductController {
 	SettingRemoteService settingRemoteService;
 	
 	@RequestMapping("/getProducts")
-	public StorageResult<PageBean<Product>> getProducts(@RequestBody(required=false) Product product,@RequestParam(required=false,value="currentPage") Integer currentPage,@RequestParam(value="pageSize",required=false)Integer pageSize){
+	public StorageResult<PageBean<Product>> getProducts(@RequestBody(required=false) Product product,@RequestParam(required=false,value="currentPage") Integer currentPage,@RequestParam(value="pageSize",required=false)Integer pageSize,
+			@RequestParam(value="sort",required=false)String sort,@RequestParam(value="categoryId",required=false)Integer categoryId
+			,@RequestParam(value="offerConfirmed",required=false)Integer offerConfirmed){
+			
 			
 		
-		ResponseEntity<String> json = productService.getProduct(product, currentPage, pageSize);
+		ResponseEntity<String> json = productService.getProduct(product, currentPage, pageSize,sort,categoryId,offerConfirmed);
 		
 		if(json.getStatusCodeValue()==200 &&json.hasBody()) {
 			String body = json.getBody();	

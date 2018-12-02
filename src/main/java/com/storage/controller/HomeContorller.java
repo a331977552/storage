@@ -3,6 +3,7 @@ package com.storage.controller;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.storage.entity.Advertisement;
 import com.storage.entity.Carousel;
 import com.storage.entity.Cart;
 import com.storage.entity.Category;
@@ -32,6 +34,7 @@ import com.storage.entity.custom.CustomCart;
 import com.storage.entity.custom.CustomProduct;
 import com.storage.entity.custom.OrderWrap;
 import com.storage.entity.custom.StorageResult;
+import com.storage.remote.service.AdRemoteService;
 import com.storage.remote.service.CarouselRemoteService;
 import com.storage.remote.service.CartRemoteService;
 import com.storage.remote.service.CategoryRemoteService;
@@ -71,6 +74,9 @@ public class HomeContorller {
 	SettingRemoteService settingRemoteService;
 	
 	@Autowired
+	AdRemoteService adService;
+	
+	@Autowired
 	CartRemoteService cartService;
 
 	Logger logger = org.slf4j.LoggerFactory.getLogger(HomeContorller.class);
@@ -85,7 +91,6 @@ public class HomeContorller {
 					new TypeReference<StorageResult<List<Carousel>>>() {
 					});
 			if (jsonToObject.isSuccess()) {
-				logger.info(jsonToObject.getResult().toString());
 				view.addObject("carousels", jsonToObject.getResult());
 			} else {
 				view.addObject("carousels", new ArrayList<Carousel>());
@@ -105,6 +110,10 @@ public class HomeContorller {
 		} else {
 			view.addObject("categories", new ArrayList<Category>());
 		}
+		String allADS = adService.getAllCarousel().getBody();
+		 List<Advertisement> jsonToList = JsonUtils.jsonToList(allADS, Advertisement.class);
+		 
+		view.addObject("allADS",jsonToList);
 		
 		view.setViewName("index");
 		return view;
@@ -314,14 +323,30 @@ public class HomeContorller {
 			
 			List<CustomCart> jsonToList = JsonUtils.jsonToList(cookieValue, CustomCart.class);
 			List<ProductDetail> products = new ArrayList<>(jsonToList.size());
-			List<CustomCart> removal = new ArrayList<>();
-			for (CustomCart customCart : jsonToList) {
+			Iterator<CustomCart> iterator = jsonToList.iterator();
+			boolean touched=false;
+
+			while(iterator.hasNext()){
+				CustomCart customCart = iterator.next();
+				
 				ResponseEntity<String> product = productService.getProduct(customCart.getProductid());
 				if (product.getStatusCode().value() == 200) {
+					if(product.getBody()==null)
+					{
+						touched=true;
+						iterator.remove();
+						continue;
+					}
 					ProductDetail detail = JsonUtils.jsonToPojo(product.getBody(), ProductDetail.class);
+					if(detail==null) {
+						touched=true;
+						iterator.remove();
+						continue;
+					}
 					Integer quantity = detail.getProduct().getQuantity();
 					if (quantity == 0 || detail.getProduct().getStatus() == PRODUCT_DELETE) {
-						removal.add(customCart);
+						touched=true;
+						iterator.remove();
 					} else {
 						if (customCart.getQuantity() > quantity)
 							customCart.setQuantity(quantity);
@@ -332,19 +357,23 @@ public class HomeContorller {
 					return model;
 				}
 			}
-
-			if (!removal.isEmpty()) {
-				jsonToList.removeAll(removal);
+			
+			if (touched) {
 				String objectToJson = JsonUtils.objectToJson(jsonToList);
 				CookieUtils.setCookie(request, response, cartName, objectToJson, true);
 			}
-			StorageResult<Setting> setting2 = settingRemoteService.getSetting();
-			
-			model.addObject("currencySymbol",setting2.getResult().getCurrencyDisplay()==1?"£":"¥");
-			model.addObject("setting",setting2.getResult());
+		
+		
 			model.addObject("items", jsonToList);
 			model.addObject("products", products);
+		}else {
+			model.addObject("items", new ArrayList<>());
+			model.addObject("products",new ArrayList<>());
 		}
+		StorageResult<Setting> setting2 = settingRemoteService.getSetting();
+		model.addObject("setting",setting2.getResult());
+		model.addObject("currencySymbol",setting2.getResult().getCurrencyDisplay()==1?"£":"¥");
+		
 		model.setViewName("cart");
 
 		return model;

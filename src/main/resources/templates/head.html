@@ -13,7 +13,6 @@
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<link rel="manifest" href="site.webmanifest">
 <link rel="apple-touch-icon" href="icon.png">
 <!-- Place favicon.ico in the root directory -->
 <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
@@ -23,11 +22,11 @@
 
 </head>
 
-<body>
-	<div class="container-fluid" th:fragment="nav" style="padding: 0px">
+<body >
+	<div class="container-fluid"  style="padding: 0px; margin: 0px;">
 
-		<nav class="navbar navbar-expand-lg  navbar-light bg-light ">
-			<a class="navbar-brand" th:href="@{/index}">Shopping</a>
+		<nav th:fragment="nav" class="navbar navbar-expand  navbar-light bg-light   " id="my-navBar">
+			<a class="navbar-brand d-none d-sm-block" th:href="@{/index}">Shopping</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse"
 				data-target="#navbarSupportedContent"
 				aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -37,10 +36,14 @@
 
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
+					<li class="nav-item"><a
+						class="nav-link " href="">
+						<span style="cursor:pointer" class="navbar-toggler-icon d-block d-sm-none d-none d-sm-block d-md-none" onclick="openNav()"></span>
+					</a></li>
 					<li class="nav-item active">
 						<div class="nav-link">
-							<span style="color:gray;" th:text="'Lang:'"></span>
-							<select id="locales">
+							<span class="d-none d-sm-block" style="float:left; margin-right:5px; color:gray;" th:text="'Lang:'"></span>
+							<select  id="locales">
 								<option value="en" th:if="${session.local_lang_my==null}"
 									th:text="#{lang.eng}"></option>
 								<option value="zh" th:if="${session.local_lang_my==null}"
@@ -54,13 +57,10 @@
 							</select>
 						</div>
 					</li>
+				
 					<li class="nav-item"><a
 						class="nav-link " th:href="@{/cart}">
-		
-
-
-						 <i
-							class="fa fa-shopping-cart"></i> <span th:text="#{index.shopping.cart}">购物车</span> <span class="sr-only">(current)</span>
+						 <i class="fa fa-shopping-cart" style="font-size: 24px;"></i> <span th:text="#{index.shopping.cart}" class="d-none d-sm-block" style="margin-left:5px;  float:right;">购物车</span> <span class="sr-only">(current)</span>
 					</a></li>
 					<li class="nav-item" th:if="${session.user==null}"><a
 						th:href="@{/register}" class="nav-link waves-effect waves-light"
