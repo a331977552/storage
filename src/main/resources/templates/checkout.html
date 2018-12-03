@@ -22,14 +22,14 @@
 		<section >
 		<div class="container">
 		<div class="py-5 text-center">
-        <h1>Checkout </h1>
+        <h1>下单订 </h1>
       </div>
 		
 		
 		<div class="row">
         <div class="col-md-4 order-md-2 mb-4">
           <h4 class="d-flex justify-content-between align-items-center mb-3">
-            <span class="text-muted">Your cart</span>
+            <span class="text-muted">您的购物车</span>
             <span class="badge badge-secondary badge-pill" ng-bind="items.length">3</span>
           </h4>
           <ul class="list-group mb-3">
@@ -49,7 +49,7 @@
               <span class="text-success">-$5</span>
             </li> -->
             <li class="list-group-item d-flex justify-content-between">
-              <span>Total (USD)</span>
+              <span>总计</span>
               <strong ng-bind="currencySymbol+totalPrice">$20</strong>
             </li>
           </ul>
@@ -130,7 +130,7 @@
             </div>
             <hr class="mb-4">
 
-            <h4 class="mb-3">Payment</h4>
+            <h4 class="mb-3">支付方式</h4>
 
             <div class="d-block my-3">
               <div class="custom-control custom-radio">
@@ -145,7 +145,7 @@
             </div>
      
             <hr class="mb-4">
-            <button class="btn btn-primary btn-lg btn-block" ng-disabled="products.length==0" type="submit" th:text=#{checkout.checkout.button}>Continue to checkout</button>
+            <button class="btn btn-red btn-lg btn-block" ng-disabled="products.length==0" type="submit" th:text=#{checkout.checkout.button}>Continue to checkout</button>
           </form>
         </div>
       </div></div>

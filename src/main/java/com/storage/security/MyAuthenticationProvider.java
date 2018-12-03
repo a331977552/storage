@@ -1,7 +1,7 @@
-package com.storage.config;
+package com.storage.security;
 
-import java.util.Collection;
-
+import com.storage.entity.Customer;
+import com.storage.entity.custom.AuthCustomer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -12,6 +12,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+
+import java.util.Collection;
 
 
 @Component
@@ -30,9 +32,10 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
 			if(!password2.equals(password)) {
 				throw new BadCredentialsException("password is wrong");
 			}
-			Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
 
-			return new UsernamePasswordAuthenticationToken(userDetails, password,authorities);
+			Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
+			Customer customer = ((AuthCustomer) userDetails).getCustomer();
+			return new UsernamePasswordAuthenticationToken(customer, password,authorities);
 
 		} catch (UsernameNotFoundException e) {
 			//			e.printStackTrace();

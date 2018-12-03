@@ -8,28 +8,28 @@
 <title></title>
 </head>
 
-<body class="bg-light">
+<body class="">
 	<!--[if lte IE 9]>
     <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
   <![endif]-->
-	<div class="container-fluid" ng-app="products"
+	<div  ng-app="products"
 		ng-controller="myControl">
 
 	
 		<div th:replace="head::nav"> </div>
-
+        <div class="container-fluid">
 		<!-- content starts here -->
-		<section class="my-2  mt-5">
+		<section class="  ">
 	
-	<div class="row my-5">
-	<div class="col-md-4 offset-md-4 my-5">
+	<div class="row ">
+	<div class="col-md-4 offset-md-4   my-2">
 		<div class="card card-outline-secondary">
-                        <div class="card-header">
-                            <h3 class="mb-0">Sign Up</h3>
+                        <div class="card-header" style="background-color: #be5960">
+                            <h3 class="mb-0" style="color: white">Sign Up</h3>
                         </div>
                         <div class="card-body">
 			<!-- Default form register -->
-<form class="text-center border border-light p-5" th:action="@{/user/register}" method="post">
+<form class="text-center border border-light" th:action="@{/user/register}" method="post">
 
     <p class="h4 mb-4">注册</p>
 
@@ -60,7 +60,7 @@
        <!--  Optional - for two step authentication -->
        	可选的
     </small>
-       <p style="color: red;" th:text="${error==null}?'':${error}">
+       <p style="color: red;" th:text="${param.error==null}?'':${param.error}">
        <!--  Optional - for two step authentication -->
       
     </p>
@@ -74,9 +74,9 @@
     </div>
 
     <!-- Sign up button -->
-    <button class="btn btn-primary my-4 btn-block" type="submit">注册</button>
+    <button class="btn btn-red my-4 btn-block" type="submit">注册</button>
 
-    <!-- Social register -->
+   <!-- &lt;!&ndash; Social register &ndash;&gt;
     <p>or sign up with:</p>
 
     <a type="button" class="light-blue-text mx-2">
@@ -92,7 +92,7 @@
         <i class="fa fa-github"></i>
     </a>
 
-    <hr>
+    <hr>-->
 
     <!-- Terms of service -->
     <p>By clicking
@@ -113,7 +113,7 @@
 	</div>
 
 
-
+    </div>
 
 
 

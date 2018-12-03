@@ -19,7 +19,7 @@
 		<div th:replace="head::nav"></div>
 	
 		<!-- content starts here -->
-		<section class="my-2">
+		<section class="my-2" >
 			<div >
 				<nav aria-label="breadcrumb">
 					<ol class="breadcrumb">
@@ -39,19 +39,19 @@
 			
 		
 			
-			<div class="container py-5 mt-5">
+			<div class="container py-5 mt-5" ng-cloak>
     <div class="row">
         <div class="col-md-8 col-sm-12 col-xs-12">
             <div class="row justify-content-between">
-                <h6>Items in your cart</h6>
-                <small class="text-muted" ng-bind="{{products.length}} +' items'">5 items</small>
+                <h6>购物车里的商品:</h6>
+                <small class="text-muted" ng-bind="{{products.length}} +' 件商品'">5 items</small>
             </div>
             <table class="table table-responsive">
                 <tbody>
                   
                   
                  
-                    <tr ng-repeat="item in items">
+                    <tr ng-repeat="item in items" >
                         <td>
                             <img  ng-src="{{products[$index].imgs[0].url+'?widht=120&height=120'}}" width="120px;" height="120px;">
                         </td>
@@ -63,7 +63,7 @@
                                 <input class="form-control form-control-sm" id="inputQty" type="number" min="1" ng-change="quantityChange(item,products[$index].product.quantity)"  ng-model="item.quantity"  >
                                 <label for="inputQty" class="form-control-label">&nbsp; Qty</label>
                             </form>
-                            <a class="small text-muted" href="#" ng-click="deleteItems($index)"><i class="fa fa-trash-o"></i> Remove item</a>
+                            <a class="small text-muted" href="#" ng-click="deleteItems($index)"><i class="fa fa-trash-o"></i> 删除商品</a>
                         </td>
                         <td>
                             <p ng-bind="currencySymbol +(products[$index].product.sellingprice_aftertax*item.quantity).toFixed(2)">$59.98</p>
@@ -73,21 +73,20 @@
             </table>
             <hr>
             <div class="row justify-content-between mb-3">
-                <a class="btn btn-outline-success" th:href="@{/index}"><i class="fa fa-arrow-left"></i>&nbsp; Continue shopping</a>
+                <a class="btn btn-red" th:href="@{/index}"><i class="fa fa-arrow-left"></i>&nbsp; 返回继续购物</a>
                <!--  <a class="btn btn-secondary" href="#">Cancel</a> -->
             </div>
         </div>
         <div class="col-md-4 col-sm-12 col-xs-12">
             <div class="card mb-3 text-right">
-                <div class="card-header"><i class="fa fa-shopping-cart"></i> Cart Summary</div>
+                <div class="card-header"><i class="fa fa-shopping-cart"></i> 购物车总结</div>
                 <div class="card-body">
-                    <h4 class="card-title mb-0" ng-bind="currencySymbol+totalPrice">$120.00</h4>
+                    <h4 class="card-title mb-0" ng-bind="currencySymbol+totalPrice">{{currencySymbol}}0.0</h4>
                     <p class="card-text small" th:text="#{cart.totalPrice}">Total</p>
-                    <button  class="btn btn-success" ng-click="checkout()" ng-disabled="items.length==0 || items==null" th:text="#{cart.submit.order}">Checkout</button>
+                    <button  class="btn btn-red" ng-click="checkout()" ng-disabled="items.length==0 || items==null" th:text="#{cart.submit.order}">Checkout</button>
                 </div>
             </div>
             <div class="card text-right">
-                <div class="card-header"><i class="fa fa-comments-o"></i> Support</div>
                 <div class="card-body">
                     <h6 class="card-title mb-0"><i class="fa fa-phone"></i><span th:text="${setting.phone}"></span></h6>
                     <p class="card-text small text-muted" th:text="#{cart.support.phone}">Please contact with us if you have any questions.</p>

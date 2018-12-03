@@ -1,0 +1,72 @@
+<meta charset="utf8">
+ <div th:fragment="filter"   class="row">
+						<div class="col-12">
+						<div style=" border: 1px solid #ddd; ">
+						<div style="border-bottom: 1px solid #c7d2d4; font-weight: bold; background-color: #efefef;
+						 width: 100%;  min-height: 40px;
+						    padding: 10px;
+						    border-radius: 0;
+						    position: relative;">Filter by</div>  
+							<div data-title="category" style="width: 100%">
+
+									
+						
+									<ul style="list-style-type: none;margin: 0;padding: 0;">
+										<li>
+											<a href=""   class=" tree-toggler" style="text-decoration: none; margin-left: 5px;"  	th:text="#{product.category.name}">商品种类</a>
+										<ul class="category-list-group tree" ng-cloak>																
+											<li class="category-list" data-ng-repeat="cate in tree">
+												
+												<a ng-click="filter('categoryId',cate.id)" href=""  ng-bind="cate.text" >Link</a>
+												<ul ng-if="cate.nodes.length>0" class="category-list-group  tree">
+													<li class="category-list" data-ng-repeat="cate2 in cate.nodes">
+														<a ng-click="filter('categoryId',cate2.id)"  href=""  ng-bind="cate2.text" >Link</a>
+														<ul ng-if="cate.nodes.length>0" class=" category-list-group tree">
+														<li class="category-list" data-ng-repeat="cate3 in cate2.nodes">
+															<a ng-click="filter('categoryId',cate3.id)"  href="" ng-bind="cate3.text">Link</a>
+																<ul ng-if="cate3.nodes.length>0" class=" category-list-group tree">
+																	<li class="category-list" data-ng-repeat="cate4 in cate3.nodes">
+																		<a ng-click="filter('categoryId',cate4.id)"   href="" ng-bind="cate4.text"></a>
+																
+																			<ul ng-if="cate4.nodes.length>0" class=" category-list-group tree">
+																					<li class="category-list" data-ng-repeat="cate5 in cate4.nodes">
+																						<a ng-click="filter('categoryId',cate5.id)"   href="" ng-bind="cate5.text">Link</a>
+																						
+																			
+																			
+																					</li>
+																		
+																				</ul>
+															
+																	</li>
+														
+																</ul>
+														
+														
+														</li>
+													
+													</ul>
+													
+													</li>
+												
+												</ul>
+											</li>
+									
+										</ul>
+ 									</li>
+									</ul>
+							
+							</div>
+							<div class="dropdown-divider"></div>
+							
+							<div>
+								<span  style="text-decoration: none; margin-left: 5px; margin-bottom: 10px;"  >选项</span>
+							</div>
+							<div style="margin-left: 15px;" class="custom-control custom-checkbox">
+							  <input type="checkbox" class="custom-control-input" ng-model="offerConfirmed" ng-bind="offerConfirmed" id="input_offer" ng-change="filter('offerConfirmed',offerConfirmed)" >
+							  <label class="custom-control-label" for="input_offer" th:text="#{index.left.offer}">促销</label>
+							</div>
+						</div>
+						</div>
+					</div>
+						

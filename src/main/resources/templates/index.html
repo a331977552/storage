@@ -10,208 +10,176 @@
 <link rel="stylesheet" th:href="@{/css/newProductCard.css}">
 
 <link rel="stylesheet" th:href="@{/css/animate.css}">
-
+<link rel="stylesheet" th:href="@{/css/Snacker.css}">
 <link th:replace="commonjs::js"></link>
 <title>TT_Mart</title>
 </head>
 
-<body class="bg-light">
+<body >
 	<!--[if lte IE 9]>
     <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
   <![endif]-->
-	<div class="container-fluid" ng-app="products" 
+	<div class=""  ng-app="products" 
 		ng-controller="myControl">
 
 		<!-- nav -->
-
 		<div th:replace="head::nav"></div>
-
+		<div id="content" class="container-fluid">
+			<div id="mySidenav" class="sidenav">
+			  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+			  <div th:replace="filter::filter"></div>
+			</div>
 		<!-- nav end -->
-
+		
+		<button onclick="topFunction()" id="btn_gotoTop" title="Go to top">Top</button>
+		
 		<!-- carousel  -->
 
-		<div class="row my-2  " style="margin-bottom: 20px;">
-			<div id="carouselExampleIndicators"
-				class="carousel slide col-md-12 justify-content-center"
-				data-ride="carousel">
-				<ol class="carousel-indicators">
-					<li th:each="car,stat:${carousels}"
-						data-target="#carouselExampleIndicators"
-						th:data-slide-to="${stat.index}"
-						th:class="${stat.index}==0?active:''"></li>
-				</ol>
-				<div class="carousel-inner">
+			<div class="row my-2  " style="margin-bottom: 20px;">
+			<!--	<div class="col-lg-2 col-xl-2 col-md-12  col-sm-12 col-xs-12"></div>-->
+				<div class="col-lg-12 col-xs-12 col-sm-12 px-2">
+					<div class="row">
 
-					<div th:each="car,stat:${carousels}"
-						th:class="${stat.index}==0?'carousel-item active':'carousel-item'">
-						<a th:href="${car.redirect_url}"> <img class="d-block w-100"
-							th:src="${car.pic_url}" alt="First slide">
-						</a>
-						<div class="carousel-caption d-none d-md-block">
-							<h5 th:text="${car.title}"></h5>
+						<div id="carouselExampleIndicators"
+							 class="carousel slide col-md-12 justify-content-center"
+							 data-ride="carousel">
+							<ol class="carousel-indicators">
+								<li th:each="car,stat:${carousels}"
+									data-target="#carouselExampleIndicators"
+									th:data-slide-to="${stat.index}"
+									th:class="${stat.index}==0?active:''"></li>
+							</ol>
+							<div class="carousel-inner">
+
+								<div th:each="car,stat:${carousels}"
+									 th:class="${stat.index}==0?'carousel-item active':'carousel-item'">
+									<a th:href="${car.redirect_url}"> <img class="d-block w-100"
+																		   th:src="${car.pic_url}" alt="First slide">
+									</a>
+									<div class="carousel-caption d-none d-md-block">
+										<h5 th:text="${car.title}"></h5>
+									</div>
+								</div>
+
+
+							</div>
+							<a class="carousel-control-prev" href="#carouselExampleIndicators"
+                                role="button" data-slide="prev"> <span
+                                class="carousel-control-prev-icon" aria-hidden="true"></span> <span
+                                class="sr-only">Previous</span>
+                            </a> <a class="carousel-control-next" href="#carouselExampleIndicators"
+                                role="button" data-slide="next"> <span
+                                class="carousel-control-next-icon" aria-hidden="true"></span> <span
+                                class="sr-only">Next</span>
+                            </a>
 						</div>
 					</div>
-
-
 				</div>
-				<a class="carousel-control-prev" href="#carouselExampleIndicators"
-					role="button" data-slide="prev"> <span
-					class="carousel-control-prev-icon" aria-hidden="true"></span> <span
-					class="sr-only">Previous</span>
-				</a> <a class="carousel-control-next" href="#carouselExampleIndicators"
-					role="button" data-slide="next"> <span
-					class="carousel-control-next-icon" aria-hidden="true"></span> <span
-					class="sr-only">Next</span>
-				</a>
 			</div>
-		</div>
 		<!-- carousel end  -->
 		<!-- search  -->
-		<div class="row">
+		<div class="row pt-3 pb-3">
 
 
 
 
-			<div class="input-group  col-md-8 mt-4 offset-md-2">
+			<div class="input-group  col-lg-8  col-xl-8 offset-lg-3  offset-xl-3">
 				<input ng-keypress="$event.keyCode==13&&search()"
 					ng-model="search_value" id="input_search" type="text"
-					class="form-control typeahead"
+					class="form-control typeahead pl-1"
 					th:placeholder="#{index.search.name}" autocomplete="off"
 					aria-label="Recipient's username" aria-describedby="basic-addon2">
 				<div class="input-group-append">
-					<button ng-click="search()" class="btn btn-outline-secondary"
+					<button ng-click="search()" class="btn btn-red"
 						type="button">搜索</button>
 				</div>
 			</div>
 
 
+			<p style="width: 100%;  " class="mt-2" align="center" ng-show="topAD" ng-cloak>
+				{{topAD.message}}
+			</p>
+		</div>
+		<div class="row"  >
 
 		</div>
 		<!-- search end -->
 		<!-- product display -->
 		<div class="row" id="products">
-			<div ng-show="products==null"
+		<!--  -->
+			<div  ng-show="products==null"
 				class="col-md-12 justify-content-center p-3" align="center">
-				<div class="loader"></div>
+				<!-- <div class="loader"></div> -->
+				<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+
 			</div>
+			
 		</div>
 		<div class="container-fluid pt-1">
 			
 		
-			<div class="row" ng-show="products!=null">
+			<div class="row "  ng-show="products!=null">
 					
-				<div class="col-lg-2 col-xl-2 col-md-12  col-sm-12 col-xs-12"
-					id="sidebar">
-
-					<div class="row">
-						<div class="col-12">
-						<div style=" border: 1px solid #ddd; ">
-						<div style="border-bottom: 1px solid #c7d2d4; font-weight: bold; background-color: #efefef;
-						 width: 100%;  min-height: 40px;
-						    padding: 10px;
-						    border-radius: 0;
-						    position: relative;">Filter by</div>  
-							<div data-title="category" style="width: 100%">
-
-									
-						
-									<ul style="list-style-type: none;margin: 0;padding: 0;">
-										<li>
-											<a href=""   class=" tree-toggler" style="text-decoration: none; margin-left: 5px;"  	th:text="#{product.category.name}">商品种类</a>
-										<ul class="category-list-group tree" ng-cloak>																
-											<li class="category-list" data-ng-repeat="cate in tree">
-												
-												<a ng-click="selectCate($event,cate.id)" href=""  ng-bind="cate.text" >Link</a>
-												<ul ng-if="cate.nodes.length>0" class="category-list-group  tree">
-													<li class="category-list" data-ng-repeat="cate2 in cate.nodes">
-														<a ng-click="selectCate($event,cate2.id)"  href=""  ng-bind="cate2.text" >Link</a>
-														<ul ng-if="cate.nodes.length>0" class=" category-list-group tree">
-														<li class="category-list" data-ng-repeat="cate3 in cate2.nodes">
-															<a ng-click="selectCate($event,cate3.id)"  href="" ng-bind="cate3.text">Link</a>
-																<ul ng-if="cate3.nodes.length>0" class=" category-list-group tree">
-																	<li class="category-list" data-ng-repeat="cate4 in cate3.nodes">
-																		<a ng-click="selectCate($event,cate4.id)"   href="" ng-bind="cate4.text"></a>
-																
-																			<ul ng-if="cate4.nodes.length>0" class=" category-list-group tree">
-																					<li class="category-list" data-ng-repeat="cate5 in cate4.nodes">
-																						<a ng-click="selectCate($event,cate5.id)"   href="" ng-bind="cate5.text">Link</a>
-																						
-																			
-																			
-																					</li>
-																		
-																				</ul>
-															
-																	</li>
-														
-																</ul>
-														
-														
-														</li>
-													
-													</ul>
-													
-													</li>
-												
-												</ul>
-											</li>
-									
-										</ul>
- 									</li>
-									</ul>
-							
-							</div>
-							<div class="dropdown-divider"></div>
-							
-							<div>
-								<span  style="text-decoration: none; margin-left: 5px; margin-bottom: 10px;"  >选项</span>
-							</div>
-							<div style="margin-left: 15px;" class="custom-control custom-checkbox">
-							  <input type="checkbox" class="custom-control-input" ng-model="offerConfirmed" ng-bind="offerConfirmed" id="input_offer" ng-change="offer()" >
-							  <label class="custom-control-label" for="input_offer" th:text="#{index.left.offer}">促销</label>
-							</div>
+				<div class="col-lg-2 col-xl-2 col-md-12  col-sm-12 col-xs-12"  style=" padding: 0px; "
+						>
+						<div ng-show="leftAD!=null" style="margin-bottom:10px;">
+							<a ng-href="{{leftAD.clickUrl}}">
+							<img style="width: 100%" ng-src="{{leftAD.imgUrl}}"/>
+							</a>
 						</div>
+						<div class="col-lg-12 col-xl-12 col-md-12  col-sm-12 col-xs-12 d-none d-lg-block d-xl-none d-xl-block"  style=" padding: 0px;"
+						id="sidebar">
+
+
+							<div th:replace="filter::filter"></div>
 						</div>
-					</div>
-						
-						
+
 				</div>
-				<div class="col-lg-10 col-xs-12 col-sm-12">
-					<div class="row">
+				<div class="col-lg-10 col-xs-12 col-sm-12 px-2"  >
+					<div class="row  " > 
 						<div class="col-lg-12" >
-							<small>showing <strong ng-bind="products.length">12</strong>
+							<div style="float: left">
+								<button class=" btn btn-light btn-sm text-muted  d-block d-sm-none d-none d-sm-block d-md-none "
+										 aria-haspopup="true" onclick="openNav()"
+										aria-expanded="false">Filter<span class="fa fa-filter"></span></button>
+
+							</div>
+							<small class="ml-1">showing <strong ng-bind="products.length">12</strong>
 								products
 							</small>
 							<div class="pull-right">
 							<!-- 	<a class="btn btn-light" href="#"><i class="fa fa-th-large"></i></a>
 								<a class="btn btn-light" href="#"><i class="fa fa-list"></i></a> -->
 								
-								<a class="btn btn-light btn-sm text-muted dropdown-toggle"
-									href="#" data-toggle="dropdown" aria-haspopup="true"
-									aria-expanded="false">默认排序</a>
+								<button class="btn btn-light btn-sm text-muted dropdown-toggle"
+									 data-toggle="dropdown" aria-haspopup="true"
+									aria-expanded="false">排序</button>
 								<div class="dropdown-menu">
-									<a class="dropdown-item active" href="#lower-price"   ng-click="sort('lower-price')"  th:text="#{index.sort.priceFromLow}">Popularity</a> 
-									<a class="dropdown-item" href="#lower-price"  ng-click="sort('high-price')"  th:text="#{index.sort.priceFromLow}">Popularity</a> 
-									<a class="dropdown-item" href="#lower-price"  ng-click="sort('latest')"  th:text="#{index.sort.priceFromLow}">Popularity</a> 
-									<a class="dropdown-item" href="#lower-price"  ng-click="sort('oldest')"  th:text="#{index.sort.priceFromLow}">Popularity</a> 
-									<a class="dropdown-item" href="#lower-price"  ng-click="sort('reset')"  >重置</a> 
+									<a ng-class="{'dropdown-item':true,'active':sort=='lower-price'}" href=""  ng-click="filter('sort','lower-price')"  th:text="#{index.sort.priceFromLow}">Popularity</a> 
+									
+									<a ng-class="{'dropdown-item':true,'active':sort=='high-price'}" href=""  ng-click="filter('sort','high-price')"  th:text="#{index.sort.priceFromHigh}">Popularity</a> 
+									<a ng-class="{'dropdown-item':true,'active':sort=='latest'}" href=""  ng-click="filter('sort','latest')"  th:text="#{index.sort.latest}">Popularity</a> 
+									<a ng-class="{'dropdown-item':true,'active':sort=='oldest'}" href=""  ng-click="filter('sort','oldest')"  th:text="#{index.sort.oldest}">Popularity</a> 
+									
+									
+									<a class=" dropdown-item" href=""  ng-click="filter('sort','reset')"  >重置</a> 
 
 								</div>
 							</div>
 						</div>
 					</div>
-					<hr>
+					<hr  class="px-2 py-1 my-1"   >
+					
 					<div class='row no-gutters'  infinite-scroll="addMoreItems()"  infinite-scroll-distance='1'  infinite-scroll-disabled='busyScrolling' >
 					
 						<div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-6 mb-1"
 							ng-repeat="product in products" style="padding-left: 5px; padding-right: 5px;" ng-cloak>
 							<div class="product-frame">
-								<span class="product-card-cart" style="margin-left: 1px;" ng-bind="product.offer">热销</span>
-							<a href="" ng-click="productDetail(product.id)">
-							<img  hires="{{product.imgUrl}}" ng-src="/img/img_placeholder.png" ng-attr-data-id="{{product.id}}"class="product-img-wrap">
+								<span class="product-card-offer" style="margin-left: 1px;" ng-show="product.offer" ng-bind="product.offer">热销</span>
+								<a  style='display:block;  width: 100%; height: 0;padding-bottom: 100%;  background: #cccccc;' href="" ng-click="productDetail(product.id)">
+									<img   ng-src="{{product.imgUrl}}" ng-attr-data-id="{{product.id}}"class="product-img-wrap">
 									
-									
-									</a>
+								</a>
 								<hr style="margin: 0px; padding: 0px;">
 													
 								<div >
@@ -232,7 +200,7 @@
 									<div align="center">
 										
 									<button ng-click="addCart($index,product.id)" 
-									 class="btn btn-info" style="width: 100%;" >添加到购物车<i style="font-size: 16px;" class="fa fa-cart-plus"></i></button>
+									 class="my-btn my-btn-outline-info" style="width: 100%;" >添加到购物车<i style="font-size: 16px;" class="fa fa-cart-plus"></i></button>
 									</div>
 								
 								
@@ -257,6 +225,7 @@
 
 				</div>
 			</div>
+			</div>
 		</div>
 	<script type="text/javascript" th:src="@{/js/angular-route.min.js}"></script>
 		<!-- Footer -->
@@ -270,85 +239,110 @@
 
 
 	<script type="text/javascript" th:src="@{/js/popper.min.js}"></script>
-		<script type="text/javascript" th:src="@{/js/vendor/jquery-3.3.1.min.js}"></script>
-	
+	<script type="text/javascript" th:src="@{/js/vendor/jquery-3.3.1.min.js}"></script>
+
 	<script type="text/javascript"
 		th:src="@{/js/bootstrap3-typeahead.min.js}"></script>
 	<script type="text/javascript" th:src="@{/js/bloodhound.min.js}"></script>
-	<script type="text/javascript" th:src="@{/js/bootstrap-notify.min.js}"></script>
-	
+
 
 	<script type="text/javascript" th:src="@{/js/MyNotify.js}"></script>
-	
+
 
 	<script type="text/javascript" th:src="@{/js/jsLocationUtil.js}"></script>
 	
 	<script type="text/javascript" th:src="@{/js/ng-infinite-scroll.min.js}"></script>
-	
-	
+
+
 	<script th:inline="javascript">
-		
+
 	
 	var u=[[@{/}]].replace("\\","");
 	var csrfName= [[${_csrf.headerName}]];
     var  token= [[${_csrf.token}]];
 	var url=u+"product/getProducts".replace("\\","");
-	var app = angular.module('products',['ngRoute','infinite-scroll']).config(['$locationProvider', function($locationProvider) {
-	
-		$locationProvider.html5Mode({enabled:true,requireBase: false});
-	}]).value('THROTTLE_MILLISECONDS', 0);
+	var app = angular.module('products',['infinite-scroll']).value('THROTTLE_MILLISECONDS', 0);
 
-	
-	app.directive('hires', function() {
-	  return {
-	    restrict: 'A',
-	    scope: { hires: '@' },
-	    link: function(scope, element, attrs) {
-	        element.one('load', function() {
-	            element.attr('src', scope.hires);
-	        });
-	    }
-	  };
-	});
+
 	app.controller('myControl', function($scope,$http,$location,$timeout) {
 		$scope.mCurrentPage=0;
 	    $scope.busyScrolling=true;
+	    $scope.sort=$location.search()["sort"];
+	    if($scope.sort==null || $scope.sort=='reset'){
+	    	$scope.sort='latest';
+	    }
+	 
+	    
+	    
 		if($location.search()["offerConfirmed"]){
-			$scope.offerConfirmed=$location.search()["offerConfirmed"]==1?true:false;
+			$scope.offerConfirmed=$location.search()["offerConfirmed"];
+		}else{
+			$scope.offerConfirmed=false;
 		}
 		
-		var categories=[[${categories}]]
+		var categories=[[${categories}]];
+		var allADS=[[${allADS}]];
+		
+		for(var i=0;i<allADS.length;i++){
+			ad= allADS[i];
+			if(ad.position==2){
+				$scope.leftAD=ad;
+				
+			}else if(ad.position==1){
+
+				$scope.topAD=ad;
+				
+			}
+		}
+		
+		
+		
+		
 		var tree=[];
 		generateTree(tree,categories);
 	 	$scope.tree=tree;
 	 	
-		$scope.selectCate=function ($event,id){
-			$event.preventDefault();		
-			goToDesiredUrl("categoryId",id);
-		
-		};
-		$scope.sort=function(type){
-
-			goToDesiredUrl("sort",type);
-		};
-		$scope.offer=function (){
+		$scope.filter=function(name,value){
+			var data={};
 			
-			goToDesiredUrl("offerConfirmed",$scope.offerConfirmed?1:0);
-		};
-		
+			if(name=='sort'){
+				if($scope.sort==value)
+					return;
+				if(value=='reset'){
+			        $scope.sort='latest';
+			    }else{
+					$scope.sort=value			    	
+			    }
+				data['name']=$scope.search_value;
+			}else if(name=='offerConfirmed'){
+				data['name']=$scope.search_value;
+				$scope.offerConfirmed=value
+			}
+			else  if(name=='categoryId'){
+				$scope.search_value=null;
+			}
+			$scope.mCurrentPage=0;
+			$location.search(name,value);
+			
+			var parameters= getParameters($location);
+			load($scope,$http,data,$timeout,parameters);
+		}
 		$scope.addMoreItems=function (){
-				console.log("addMoreItems");
 			 $scope.busyScrolling=true;
 			var inputValue=$scope.search_value;
-			
+			 var parameters= getParameters($location);
 			$http({  
 			    method:'post',  
-			    url:url+"?currentPage="+$scope.mCurrentPage+"&pageSize=24",  				
-			    data:{} 				
+			    url:url+"?currentPage="+$scope.mCurrentPage+"&pageSize=24"+parameters,  				
+			    data:{'name':inputValue} 				
 			}).then(function successCallback(req){
-				 $scope.products=$scope.products.concat(req["data"]["result"]["beans"]);							
+				if(req["data"]["code"]==200){
+				 $scope.products=$scope.products.concat(req["data"]["result"]["beans"]);												
+				}else{
+					showNotifactionInCenter(req["data"]["msg"],true,"warning");	    	
+				}
 				 $scope.busyScrolling=false;
-			})  
+			});  
 			
 		}
 		
@@ -358,6 +352,8 @@
 	    $scope.addCart=function($index, id){
 	    	if($scope.products[$index].quantity==0)
 	    		{
+
+
 	    		showNotifactionInCenter($scope.products[$index].name+"没有库存了",true,"warning");	    	
 	    		return ;
 	    		}
@@ -370,52 +366,89 @@
 				    data:[{productid:id,quantity:1}] 					
 				}).then(function successCallback(req){  			
 					if(req["data"]["code"]==200){
+
 						showNotifaction([[#{index.shopping.cart.success}]])
 					}	
 					
-				})  
+				}, function errorCallback(response) {
+					showNotifactionInCenter("server error",true,"warning");	    	
+					$timeout(function (){
+						$scope.busyLoading=false;
+						 $scope.busyScrolling=false; 
+					},1000);
+				  })  
 			
 		        	
 	    }
+	    
+	    getParameters($location);
 	    $scope.search=function (){
 	    	var inputValue=$scope.search_value;
-	    	load($scope,$http,0,{name:inputValue},$timeout); 	
+			$location.search("categoryId",null);
+			$location.search("offerConfirmed",null);
+			
+			$scope.mCurrentPage=0;
+			$scope.offerConfirmed=false;
+			//get sort
+			var parameters=  getParameters($location);
+			
+	    	load($scope,$http,{name:inputValue},$timeout,parameters); 	
 	    }
-		load($scope,$http,0,{},$timeout);
+	    var parameters= getParameters($location);
+		load($scope,$http,{},$timeout,parameters);
 	  
 	});
-	
-	function processUrl(){
+	function getParameters($location){
+		var paramters="";
+		if($location.search()["offerConfirmed"]){
+			paramters+="&offerConfirmed=";
+			paramters+=($location.search()["offerConfirmed"]==true?1:0);
+			
+		}
 		
+		if($location.search()["categoryId"]){
+			
+			paramters+="&categoryId="+$location.search()["categoryId"];
+		}
+		if($location.search()["sort"]){
+			paramters+="&sort="+$location.search()["sort"];
+			
+		}
+
+		return paramters;
+
 	}
-	function load($scope,$http,currentPage,dataValue,$timeout){
-		 $scope.busyScrolling=true;
-		 $http.defaults.headers.common[csrfName] = token;
+	
+
+	function load($scope,$http,dataValue,$timeout,parameters){
+		if($scope.busyLoading)
+			return;
+		$scope.busyScrolling=true;
+		$scope.busyLoading=true; 
+		$http.defaults.headers.common[csrfName] = token;
 			$http({  
 			    method:'post',  
-
-			    url:url+"?currentPage="+currentPage+"&pageSize=24",  
-
-			    data:dataValue 
-				
-
+			    url:url+"?currentPage="+$scope.mCurrentPage+"&pageSize=24"+parameters,  
+			    data:dataValue 				
 			}).then(function successCallback(req){
-				$scope.products=req["data"]["result"]["beans"];
-				$scope.pages=req["data"]["result"];
-			
-				$scope.mCurrentPage++;
-				var start=$scope.pages["beginNumber"]+1;
-				var end=$scope.pages["endNumber"]+1;
-			
-				var input=[];
-				for(var i=start;i<end;i++){
-		    		input.push(i);
-		    	}
-				$scope.pageArray=input;
+				if(req["data"]["code"]==200)
+				{					
+					$scope.products=req["data"]["result"]["beans"];
+					$scope.mCurrentPage++;				
+				}else{
+					showNotifactionInCenter(req["data"]["msg"],true,"warning");	    
+				}	
 				$timeout(function (){
+					$scope.busyLoading=false;
 					 $scope.busyScrolling=false; 
-				},1000);
-			})  
+				},500);
+			}, function errorCallback(response) {
+				showNotifactionInCenter("server error",true,"warning");	    
+				$timeout(function (){
+					$scope.busyLoading=false;
+					 $scope.busyScrolling=false; 
+				},500);
+			  })  
 		
 	}
 	
@@ -458,6 +491,7 @@
 		  $('a.tree-toggler').click(function () {
 		        $(this).parent().children('ul.tree').toggle(300);
 		    });
+		  
 		
 	})
 	function generateTree(parent,categories){
@@ -492,6 +526,53 @@
 		}	
 		}
 	}
+	  window.onscroll = function() {
+			scrollFunction();
+			stickyFunction();	
+		};
+
+		function scrollFunction() {
+			
+		    if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+		        document.getElementById("btn_gotoTop").style.display = "block";
+		    } else {
+		        document.getElementById("btn_gotoTop").style.display = "none";
+		    }
+		}
+
+		// When the user clicks on the button, scroll to the top of the document
+		function topFunction() {
+		   
+			window.scroll({
+				  top: 0, 
+				  left: 0, 
+				});
+			//document.body.scrollTop = 0; // For Safari
+		   // document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+		}
+
+		var navbar = document.getElementById("my-navBar");
+		//$("#my-navBar").width($("#my-navBar").width());
+		var sticky = navbar.offsetTop+0.1;
+
+		function stickyFunction() {
+		  if (window.pageYOffset > sticky) {
+		    navbar.classList.add("my-sticky")
+		  } else {
+		    navbar.classList.remove("my-sticky");
+		  }
+		}
+		
+		
+		function openNav() {
+		    document.getElementById("mySidenav").style.width = "250px";
+		}
+
+		function closeNav() {
+		    document.getElementById("mySidenav").style.width = "0";
+		}
+	
+	
 	
 	
 	</script>

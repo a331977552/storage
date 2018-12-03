@@ -1,22 +1,15 @@
 package com.storage.remote.service;
 
 
-import java.util.List;
-
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.storage.entity.Product;
 import com.storage.entity.custom.CustomProduct;
 import com.storage.entity.custom.StorageResult;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @FeignClient(value="back-service")
@@ -30,7 +23,12 @@ public interface ProductRemoteService {
 	ResponseEntity<String>   getProductByBarcode(@RequestParam(required=false,name="barcode",value="barcode") String barcode,@RequestParam(required=false,name="id",value="id") Integer id);
 	@RequestMapping(value="/product/list", consumes= {MediaType.APPLICATION_JSON_UTF8_VALUE}, produces= {MediaType.APPLICATION_JSON_UTF8_VALUE})
 
-	ResponseEntity<String>   getProduct(@RequestBody(required=false) Product product, @RequestParam(value="currentPage",required=false)Integer currentPage, @RequestParam(value="pageSize",required=false) Integer pageSize);
+	ResponseEntity<String>   getProduct(
+			@RequestBody(required=false) Product product, @RequestParam(value="currentPage",required=false)Integer currentPage, 
+			@RequestParam(value="pageSize",required=false) Integer pageSize,
+			@RequestParam(value="sort",required=false)String sort,@RequestParam(value="categoryId",required=false)Integer categoryId
+			,@RequestParam(value="offerConfirmed",required=false)Integer offerConfirmed
+			);
 	@DeleteMapping("/product/delete/{id}")
 	StorageResult<Product>   deleteProductById(@PathVariable("id")Integer id);
 	@GetMapping("/product/stockreminder")
@@ -48,5 +46,6 @@ public interface ProductRemoteService {
 	ResponseEntity<String> getProductByExample(@RequestBody String jsonToList);
 	@RequestMapping("/product/getbestsellingproduct")	
 	ResponseEntity<String> getBestSellingProduct(@RequestParam("category") Integer categoryId);
-	
+	@PostMapping("/product/getListByIds")
+	 ResponseEntity<String> getProductsByIds(@RequestBody  List<Integer> ids);
 }

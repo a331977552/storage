@@ -1,13 +1,14 @@
 package com.storage.controller;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.storage.entity.Cart;
+import com.storage.entity.Customer;
+import com.storage.entity.custom.CustomCart;
+import com.storage.entity.custom.StorageResult;
+import com.storage.entity.utils.Constants;
+import com.storage.remote.service.CartRemoteService;
+import com.storage.utils.CookieUtils;
+import com.storage.utils.JsonUtils;
+import com.storage.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -16,14 +17,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.storage.entity.Cart;
-import com.storage.entity.Customer;
-import com.storage.entity.custom.CustomCart;
-import com.storage.entity.custom.StorageResult;
-import com.storage.remote.service.CartRemoteService;
-import com.storage.utils.CookieUtils;
-import com.storage.utils.JsonUtils;
-import com.storage.utils.StringUtils;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController()
 @RequestMapping("/cart")
@@ -40,18 +39,18 @@ public class CartController {
 	public Object addCart(HttpServletRequest request,HttpServletResponse response,@RequestBody List<CustomCart> list) {
 		Cart cart=new Cart();
 		cart.setItems(JsonUtils.objectToJson(list));
-		Object attribute = request.getSession().getAttribute("user");		
+		Object attribute = request.getAttribute("user");
 		String cookieValue = CookieUtils.getCookieValue(request, cartName,true);
 		if(true) {
 			if(StringUtils.isEmpty(cookieValue)) {				
 				cookieValue=cart.getItems();
-				CookieUtils.setCookie(request, response, cartName, cookieValue,true);	
+				CookieUtils.setCookie(request, response, cartName, cookieValue, Constants.CART_COOKIE_TIME,true);
 			}else {
 				String items = cart.getItems();				
-				List<CustomCart> jsonToList = JsonUtils.jsonToList(items, CustomCart.class);
-				List<CustomCart> jsonToList2 = JsonUtils.jsonToList(cookieValue, CustomCart.class);
-				String merge = merge(jsonToList,jsonToList2);
-				CookieUtils.setCookie(request, response, cartName, merge,3600*24*31,true);	
+				List<CustomCart> itemsFromLive = JsonUtils.jsonToList(items, CustomCart.class);
+				List<CustomCart> itemsFromCookies = JsonUtils.jsonToList(cookieValue, CustomCart.class);
+				String merge = merge(itemsFromLive,itemsFromCookies);
+				CookieUtils.setCookie(request, response, cartName, merge,Constants.CART_COOKIE_TIME,true);
 			}
 			return StorageResult.succeed(cart);
 		}else 
@@ -62,7 +61,6 @@ public class CartController {
 			StorageResult<Cart> result;
 			if(StringUtils.isEmpty(cookieValue)) {
 				result = service.merge(cart);
-				
 			}else {
 				String items = cart.getItems();	
 				//merge locally
@@ -74,7 +72,7 @@ public class CartController {
 			}			
 		
 			if(result.isSuccess()) {
-				CookieUtils.setCookie(request, response, cartName, result.getResult().getItems(),3600*24*31,true);					
+				CookieUtils.setCookie(request, response, cartName, result.getResult().getItems(),Constants.CART_COOKIE_TIME,true);
 			}		
 			return StorageResult.succeed(cart);
 		}

@@ -1,17 +1,12 @@
 package com.storage.remote.service;
 
-import java.util.List;
-
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.storage.entity.Customer;
 import com.storage.entity.custom.StorageResult;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 @FeignClient(value="back-service")
 public interface CustomerRemoteService {
 
@@ -44,5 +39,9 @@ public interface CustomerRemoteService {
 	
 	@PostMapping("/customer/login")
 	StorageResult<Customer> login(@RequestBody Customer customer);
-	
+
+	@GetMapping("/customer/createEmptyUser")
+    ResponseEntity<Customer> createEmptyUser();
+	@GetMapping("/customer/getbySession")
+	ResponseEntity<Customer> getCustomerbySessionId(@RequestParam(name="sessionId")  String sessionId);
 }

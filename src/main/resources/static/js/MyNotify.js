@@ -1,15 +1,34 @@
 /**
  * 
  */
+initializeSnacker();
+function initializeSnacker(){
+
+
+
+}
 
 function showNotifaction(msg){
-		$.notify({message:msg}, {
+    var iDiv = document.createElement('div');
+    iDiv.innerHTML=msg;
+    iDiv.classList.add("show",'cody___snackbar');
+
+    document.getElementsByTagName('body')[0].appendChild(iDiv);
+
+
+    // Add the "show" class to DIV
+
+    // After 3 seconds, remove the show class from DIV
+    setTimeout(function(){
+        document.getElementsByTagName('body')[0].removeChild(iDiv);
+        }, 2000);
+		/*$.notify({message:msg}, {
 			animate: {
 				enter: 'animated fadeInUp',
 				exit: 'animated fadeOutDown'
 			},
 		placement:{
-			from:'bottom',	
+			from:'bottom',
 			align:'center'
 		},
 		offset:{
@@ -21,12 +40,25 @@ function showNotifaction(msg){
 		delay: 1000,
 		timer: 1000,
 		type:'success',
-		
-		});		
+
+		});		*/
 	}
 
 function showNotifactionInCenter(msg,dismissable,typ){
-	$.notify({message:msg}, {
+    var iDiv = document.createElement('div');
+    iDiv.innerHTML=msg;
+    iDiv.classList.add("show",'cody___snackbar');
+
+    document.getElementsByTagName('body')[0].appendChild(iDiv);
+
+
+    // Add the "show" class to DIV
+
+    // After 3 seconds, remove the show class from DIV
+    setTimeout(function(){
+        document.getElementsByTagName('body')[0].removeChild(iDiv);
+    }, 2000);
+	/*$.notify({message:msg}, {
 		animate: {
 			enter: 'animated fadeInUp',
 			exit: 'animated fadeOutDown'
@@ -45,5 +77,6 @@ function showNotifactionInCenter(msg,dismissable,typ){
 	timer: 1000,
 	type:typ,
 	
-	});		
+	});		*/
+
 }

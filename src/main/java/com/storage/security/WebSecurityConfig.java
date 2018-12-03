@@ -1,5 +1,6 @@
-package com.storage.config;
+package com.storage.security;
 
+import com.storage.entity.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -43,7 +44,7 @@ public class WebSecurityConfig  extends WebSecurityConfigurerAdapter{
 		http.authorizeRequests().antMatchers("/**").
 		permitAll().and().formLogin().loginPage("/login").loginProcessingUrl("/login").successHandler(new SimpleLoginSuccessHandler())
 		.permitAll().and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/my_logout")
-		.deleteCookies("JSESSIONID")
+		.deleteCookies("JSESSIONID", Constants.USER_SESSION_ID)
 		.invalidateHttpSession(true).and().rememberMe().tokenValiditySeconds(3600*24);
 		
 		

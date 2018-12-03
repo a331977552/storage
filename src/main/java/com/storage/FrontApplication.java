@@ -1,7 +1,7 @@
 package com.storage;
 
-import java.util.Locale;
-
+import com.storage.intercepter.LoginIntercepter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -13,6 +13,8 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+
+import java.util.Locale;
 
 @SpringBootApplication
 @EnableDiscoveryClient
@@ -31,13 +33,18 @@ public class FrontApplication implements WebMvcConfigurer {
 			
 //		HttpServletResponse
 	}
+	@Autowired
+	LoginIntercepter loginIntercepter;
 @Override
 public void addInterceptors(InterceptorRegistry registry) {
 	registry.addInterceptor(localeChangeInterceptor());
-	
+	registry.addInterceptor(loginIntercepter).excludePathPatterns("/error/**","/error-404/**","/error-500/**","/error-403/**",
+			"/static/**","/dist/**","/plugins/**"
+			);
+
 
 }
-	
+
 	@Bean
 	public LocaleResolver localeResolver() {
 	    SessionLocaleResolver slr = new SessionLocaleResolver();
